@@ -1,0 +1,16 @@
+<PlayerBullet>
+  <Type1 type = "NORMAL">
+    <diameter value = "14"/>
+    <angle1 value = "3.141592654 / 2"/>
+    <angle2 value = "3.141592654 / 2"/>
+    <speed value = "10"/>
+    <damage value = "1"/>
+  </Type1>
+  <Type2 type = "SUPPORT">
+    <diameter value = "16"/>
+    <angle1 value = "3.141592654 * 3 / 4"/>
+    <angle2 value = "3.141592654 / 4"/>
+    <speed value = "7"/>
+    <damage value = "2"/>
+  </Type2>
+</PlayerBullet>

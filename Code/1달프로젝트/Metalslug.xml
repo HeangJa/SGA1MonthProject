@@ -1,0 +1,20 @@
+<Player Path ="테스트한다">
+  <Idle Repeat="1">
+    <Frame Index ="0" Time ="200">
+      <Start x="4" y="2"/>
+      <End x ="34" y="40"/>
+    </Frame>
+  </Idle>
+  <Run Repeat="1">
+    <Frame Index ="0" Time ="100">
+      <Start x="107" y="1"/>
+      <End x ="137" y="41"/>
+    </Frame>
+  </Run>
+  <Shoot Repeat="0">
+   <Frame Index ="0" Time ="100">
+      <Start x="3" y="59"/>
+      <End x ="53" y="96"/>
+    </Frame>
+  </Shoot>
+</Player>
