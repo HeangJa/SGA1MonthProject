@@ -109,7 +109,7 @@ void EnemyObject::createEnemy(float ingameTime)
 {
 	for (int i = 0; i < 8; i++)
 	{
-		if (enemyObject[i].appearanceTime < ingameTime && enemyObject[i].state == NOTCREATE)
+		if (enemyObject[i].appearanceTime < ingameTime + 10 && enemyObject[i].state == NOTCREATE)
 		{
 			e_Object.push_back(enemyObject[i]);
 			enemyObject[i].state = CREATE;
@@ -122,6 +122,13 @@ void EnemyObject::moveEnemy()
 	e_Object_it = e_Object.begin();
 	for (; e_Object_it != e_Object.end();)
 	{
+		// 필드 내 존재 시 상태변경
+		if ((*e_Object_it).x > F_LEFT && (*e_Object_it).x < F_RIGHT &&
+			(*e_Object_it).y > F_UP && (*e_Object_it).y < F_DOWN)
+		{
+			(*e_Object_it).state = ALIVE;
+		}
+
 		// 움직임 타입에 따른 이동
 		if ((*e_Object_it).moveType == 0)
 		{
@@ -139,19 +146,14 @@ void EnemyObject::moveEnemy()
 				else
 					(*e_Object_it).angle = PI / 4;
 				(*e_Object_it).speed = 2;
+
+				(*e_Object_it).state = DEAD;
 			}
 			else
 				(*e_Object_it).angle = PI * 3 / 2;
 			
 			(*e_Object_it).x += (cosf((*e_Object_it).angle) * (*e_Object_it).speed);
 			(*e_Object_it).y += (-sinf((*e_Object_it).angle) * (*e_Object_it).speed);
-		}
-
-		// 필드 내 존재 시 상태변경
-		if ((*e_Object_it).x > F_LEFT && (*e_Object_it).x < F_RIGHT &&
-			(*e_Object_it).y > F_UP && (*e_Object_it).y < F_DOWN)
-		{
-			(*e_Object_it).state = ALIVE;
 		}
 
 		// 각도에 따른 애니메이션
@@ -271,10 +273,23 @@ void EnemyObject::moveEnemy()
 			}
 		}
 
-		// 필드 밖으로 이동 시 제거
-		if (!((*e_Object_it).x > F_LEFT && (*e_Object_it).x < F_RIGHT &&
-			(*e_Object_it).y > F_UP && (*e_Object_it).y < F_DOWN) && (*e_Object_it).state == ALIVE)
+		// 필드 밖으로 이동 시 or 죽었을 시 제거
+		if ((!((*e_Object_it).x > F_LEFT && (*e_Object_it).x < F_RIGHT &&
+			(*e_Object_it).y > F_UP && (*e_Object_it).y < F_DOWN) && (*e_Object_it).state == ALIVE) ||
+			(*e_Object_it).state == DEAD)
+		{
+			// 아이템 생성
+			if ((*e_Object_it).state == DEAD)
+			{
+				SOUNDMANAGER->Play(TEXT("EnemyDead"), 0.1f);
+
+				if((*e_Object_it).type == BLUEFAIRY || (*e_Object_it).type == REDFAIRY)
+					ITEMS->createItem((*e_Object_it).type, (*e_Object_it).x, (*e_Object_it).y);
+			}				
+
+			// 제거
 			e_Object_it = e_Object.erase(e_Object_it);
+		}
 		else
 			++e_Object_it;
 	}
@@ -282,14 +297,10 @@ void EnemyObject::moveEnemy()
 
 void EnemyObject::render(HDC hdc)
 {
-	TCHAR szTemp[100] = { 0, };
 	int i = 0;
 	e_Object_it = e_Object.begin();
 	for (; e_Object_it != e_Object.end(); e_Object_it++, i++)
 	{
-		_stprintf_s(szTemp, sizeof(szTemp), TEXT("%d"), (*e_Object_it).imageFrameX);
-		TextOut(hdc, 540 + i*10, 390, szTemp, _tcslen(szTemp));
-
 		if ((*e_Object_it).state == ALIVE)
 		{
 			if ((*e_Object_it).type == BLUEFAIRY)
@@ -331,6 +342,7 @@ void EnemyObject::render(HDC hdc)
 	}
 
 	// 디버그용
+	TCHAR szTemp[100] = { 0, };
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("적 오브젝트 개수 : %d"), e_Object.size());
 	TextOut(hdc, 540, 360, szTemp, _tcslen(szTemp));
 }

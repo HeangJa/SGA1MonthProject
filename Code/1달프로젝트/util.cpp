@@ -17,7 +17,7 @@ namespace UTIL
 		float x = x2 - x1;
 		float y = y2 - y1;
 
-		float dist = sqrtf(x*x + y * y);
+		float dist = sqrtf(x * x + y * y);
 		float angle = acosf(x / dist);
 
 		if (y2 > y1)

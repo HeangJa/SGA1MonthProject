@@ -12,7 +12,6 @@ private:
 	int		state;
 
 	int		highScore;
-	int		myScore;
 
 	float	ingameStartTime;
 

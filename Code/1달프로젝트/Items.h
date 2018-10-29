@@ -4,17 +4,22 @@
 class Items : public singletonBase<Items>
 {
 private:
+	Image * blueItem;
+	Image * redItem;
+
 	typedef struct tagiteminfo
 	{
+		int   type;
 		int	  state;
 		float x;
 		float y;
+		float angle;
 		float speed;
 		float gravity;
 		float diameter;
 	}ITEMINFO;
 
-	ITEMINFO	itemInfo[2];
+	ITEMINFO	itemInfo;
 
 	typedef list<ITEMINFO>				itemInfoList;
 	typedef list<ITEMINFO>::iterator	itemInfoList_it;
@@ -29,6 +34,6 @@ public:
 	void init();
 	void createItem(int type, float x, float y);
 	void moveItem();
-	void render();
+	void render(HDC hdc);
 };
 

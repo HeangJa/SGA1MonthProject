@@ -61,13 +61,13 @@ void Player::init()
 
 	// 플레이어 정보
 	playerImage->setFrameX(P_ANI_NORMAL);
-	playerPos = { (LONG)playerImage->getX() + 26, (LONG)playerImage->getY() + 24 };
 	playerDiameter = 10;
 	playerSpeed = NORMAL_SPEED;
 	playerAlpha = OPAQUE_;
 	isPlayerDead = true;
 	isPlayerInvincible = false;
 	playerInvincibleTimer = 0;
+	playerScore = 0;
 	playerLife = 3;
 	playerPower = 39;
 
@@ -177,8 +177,12 @@ void Player::update()
 		createBulletTimer = 0;
 		createSupportBulletTimer = 0;
 	}
+
+	// 플레이어 좌표
+	playerPosX = playerImage->getX() + 32;
+	playerPosY = playerImage->getY() + 48;
 		
-	
+	// 탄 이동
 	moveBullet();
 
 	// 이미지 회전 관련
@@ -213,7 +217,7 @@ void Player::render(HDC hdc)
 
 	// SHIFT누를 때
 	if(KEYMANAGER->isStayKeyDown(VK_LSHIFT) || KEYMANAGER->isStayKeyDown(VK_RSHIFT))
-		EllipseMakeCenter(hdc, playerPos.x, playerPos.y, playerDiameter, playerDiameter);
+		EllipseMakeCenter(hdc, playerPosX, playerPosY, playerDiameter, playerDiameter);
 
 	// 서포터
 	for (int i = 0; i < (int)(playerPower / 10); i++)
@@ -264,7 +268,6 @@ void Player::rotate(float angle)
 	// 회전 중심 좌표(이미지 중앙)
 	float centerX = playerShiftImage->getX() + (playerShiftImage->getWidth() / 2);
 	float centerY = playerShiftImage->getY() + (playerShiftImage->getHeight() / 2);
-	playerPos = { (LONG)centerX, (LONG)centerY };
 
 	// 회전 변환
 	// Upper-Left
@@ -399,7 +402,7 @@ void Player::renderBullet(HDC hdc)
 
 	// 디버그용
 	TCHAR szTemp[100] = { 0, };
-	Rectangle(hdc, 530, 280, 750, 400);
+	Rectangle(hdc, 530, 280, 750, 580);
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("플레이어 총알 개수 : %d"), p_Bullet.size());
 	TextOut(hdc, 540, 330, szTemp, _tcslen(szTemp));
 }

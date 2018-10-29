@@ -44,7 +44,6 @@ HRESULT InGameScene::init()
 	ingameStartTime = TIMEMANAGER->getWorldTime();
 
 	highScore = 0;
-	myScore = 0;
 
 	stage1ImageAlpha = 1;
 	changingAlphaValue = 3;
@@ -56,6 +55,7 @@ HRESULT InGameScene::init()
 	// 오브젝트들 초기화
 	PLAYER->init();
 	ENEMYOBJECT->init();
+	ITEMS->init();
 
 	SOUNDMANAGER->Play(TEXT("Field"), 0.2f);
 
@@ -96,6 +96,9 @@ void InGameScene::update()
 		ENEMYOBJECT->createEnemy(TIMEMANAGER->getIngameSceneTime(ingameStartTime));
 		ENEMYOBJECT->moveEnemy();
 
+		// 아이템
+		ITEMS->moveItem();
+
 	}
 
 	else if (state == PAUSE)
@@ -119,7 +122,7 @@ void InGameScene::render()
 	info->render(getMemDC());
 
 	NUMBERMANAGER->DrawNumber(getMemDC(), highScore, 646, 43, 1.5f, 6);
-	NUMBERMANAGER->DrawNumber(getMemDC(), myScore, 646, 83, 1.5f, 6);
+	NUMBERMANAGER->DrawNumber(getMemDC(), PLAYER->getPlayerScore(), 646, 83, 1.5f, 6);
 
 	for (int i = 0; i < PLAYER->getPlayerLife(); i++)
 	{
@@ -137,6 +140,9 @@ void InGameScene::render()
 
 	// 적 오프젝트
 	ENEMYOBJECT->render(getMemDC());
+
+	// 아이템
+	ITEMS->render(getMemDC());
 
 	// 경과시간
 	TCHAR szTemp[100] = { 0, };

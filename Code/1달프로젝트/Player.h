@@ -8,7 +8,9 @@ private:
 	Image * playerImage;
 	Image *	playerShiftImage;
 	Image * playerShiftMaskImage;
-	POINT	playerPos;
+	
+	float	playerPosX;
+	float	playerPosY;
 
 	int		playerDiameter;
 	int		playerType;
@@ -16,6 +18,7 @@ private:
 	int		playerAlpha;
 	int		playerLife;
 	int		playerPower;
+	int		playerScore;
 
 	int		playerMotionTimer;
 
@@ -77,16 +80,27 @@ public:
 	void update();
 	void render(HDC hdc);
 
-	void setPlayerPos(POINT point) { playerPos = point; }
-	POINT getPlayerPos() { return playerPos; }
+	void  setplayerPosX(float x) { playerPosX = x; }
+	float getPlayerPosX() { return playerPosX; }
+
+	void  setplayerPosY(float y) { playerPosY = y; }
+	float getPlayerPosY() { return playerPosY; }
 
 	void setPlayerType(int type) { playerType = type; }
 	int	 getPlayerType() { return playerType; }
 
+	void setPlayerScore(int score) { playerScore = score; }
+	int	 getPlayerScore() { return playerScore; }
+
 	void setPlayerLife(int life) { playerLife = life; }
 	int  getPlayerLife() { return playerLife; }
 
-	void setPlayerPower(bool power) { playerPower = power; }
+	void setPlayerPower(int power) { 
+		playerPower = power;
+
+		if (playerPower > 40)
+			playerPower = 40;
+	}
 	int  getPlayerPower() { return playerPower; }
 
 	void setIsPlayerDead(bool b) { isPlayerDead = b; }
