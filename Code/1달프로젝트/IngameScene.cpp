@@ -55,6 +55,7 @@ HRESULT InGameScene::init()
 	// init()
 	PLAYER->init();
 	ENEMYOBJECT->init();
+	COLLISION->init();
 
 	SOUNDMANAGER->Play(TEXT("Field"), 0.2f);
 
@@ -96,6 +97,9 @@ void InGameScene::update()
 
 		// 아이템
 		ITEMS->moveItem();
+
+		//충돌
+		COLLISION->collisionCheck();
 
 	}
 
@@ -141,6 +145,9 @@ void InGameScene::render()
 
 	// 아이템
 	ITEMS->render(getMemDC());
+
+	//충돌
+	COLLISION->effectRender(getMemDC());
 
 	// 경과시간
 	TCHAR szTemp[100] = { 0, };

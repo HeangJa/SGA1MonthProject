@@ -177,10 +177,6 @@ void Player::update()
 		createBulletTimer = 0;
 		createSupportBulletTimer = 0;
 	}
-
-	// 플레이어 좌표
-	playerPosX = playerImage->getX() + 16;
-	playerPosY = playerImage->getY() + 24;
 		
 	// 탄 이동
 	moveBullet();
@@ -203,6 +199,10 @@ void Player::update()
 
 	// 모션 타이머 증가
 	playerMotionTimer++;
+
+	// 플레이어 좌표
+	playerPosX = playerImage->getX() + 16;
+	playerPosY = playerImage->getY() + 24;
 }
 
 void Player::render(HDC hdc)
@@ -235,6 +235,7 @@ void Player::ifPlayerDead()
 	if (isPlayerDead == true)
 	{
 		SOUNDMANAGER->Play(TEXT("PlayerDead"), 0.2f);
+		playerLife -= 1;
 		isPlayerDead = false;
 		isPlayerInvincible = true;
 		playerAlpha = TRANSLUCENT_;
@@ -407,4 +408,7 @@ void Player::renderBullet(HDC hdc)
 	Rectangle(hdc, 530, 280, 750, 580);
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("플레이어 총알 개수 : %d"), p_Bullet.size());
 	TextOut(hdc, 540, 330, szTemp, _tcslen(szTemp));
+
+	_stprintf_s(szTemp, sizeof(szTemp), TEXT("플레이어 라이프 : %d"), playerLife);
+	TextOut(hdc, 540, 500, szTemp, _tcslen(szTemp));
 }

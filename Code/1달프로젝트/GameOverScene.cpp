@@ -71,7 +71,7 @@ void GameOverScene::update()
 		{
 			SOUNDMANAGER->Stop(TEXT("End"));
 
-			SCENEMANAGER->ChangeScene(TEXT("IngameScene"));
+			SCENEMANAGER->ChangeScene(TEXT("InGameScene"));
 		}
 		else if (currentMenu == RETURNTOMENU)
 		{

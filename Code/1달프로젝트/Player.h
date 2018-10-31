@@ -3,6 +3,28 @@
 
 class Player : public singletonBase<Player>
 {
+public:
+	typedef struct tagloadbulletinfo
+	{
+		float diameter;
+		float angle1;
+		float angle2;
+		float speed;
+		int	  damage;
+		int	  type;
+	}LOAD_P_BULLET;
+
+	typedef struct tagbulletinfo
+	{
+		int   state;
+		float x, y;
+		float diameter;
+		float angle;
+		float speed;
+		int	  damage;
+		int	  type;
+	}P_BULLET;
+
 private:
 	// 플레이어 관련
 	Image * playerImage;
@@ -27,27 +49,6 @@ private:
 	int		playerInvincibleTimer;
 
 	// 탄 관련
-	typedef struct tagloadbulletinfo
-	{
-		float diameter;
-		float angle1;
-		float angle2;
-		float speed;
-		int	  damage;
-		int	  type;
-	}LOAD_P_BULLET;
-
-	typedef struct tagbulletinfo
-	{
-		int   state;
-		float x, y;
-		float diameter;
-		float angle;
-		float speed;
-		int	  damage;
-		int	  type;
-	}P_BULLET;
-
 	LOAD_P_BULLET	load_bullet[2];
 	P_BULLET		bullet;
 
@@ -117,5 +118,11 @@ public:
 	void createBullet();
 	void moveBullet();
 	void renderBullet(HDC hdc);
+
+	// 충돌함수에서 쓰기위한 함수
+	float getPlayerDiameter() { return playerDiameter; }
+	int	 getP_BulletSize() { return p_Bullet.size(); }
+	bulletInfo_it getP_Bullet_Begin() { return p_Bullet.begin(); }
+	bulletInfo_it getP_Bullet_End() { return p_Bullet.end(); }
 };
 

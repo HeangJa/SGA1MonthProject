@@ -34,8 +34,9 @@ HRESULT mainGame::init()
 	SOUNDMANAGER->AddSound(TEXT("PlayerDead"), TEXT("Sound\\PlayerDead.wav"), false, false);
 	SOUNDMANAGER->AddSound(TEXT("EnemyAttack"), TEXT("Sound\\EnemyAttack.wav"), false, false);
 	SOUNDMANAGER->AddSound(TEXT("EnemyDead"), TEXT("Sound\\EnemyDead.wav"), false, false);
+	SOUNDMANAGER->AddSound(TEXT("EnemyDamage"), TEXT("Sound\\EnemyDamage.wav"), false, false);
 	SOUNDMANAGER->AddSound(TEXT("Boss"), TEXT("Sound\\Boss.wav"), false, false);
-	SOUNDMANAGER->AddSound(TEXT("End"), TEXT("Sound\\End.wav"), false, false);
+	SOUNDMANAGER->AddSound(TEXT("End"), TEXT("Sound\\End.wav"), false, false); 
 	
 	//씬매니저 초기화 및 씬 등록
 	SCENEMANAGER->AddScene(TEXT("LoadingScene"), new LoadingScene);
