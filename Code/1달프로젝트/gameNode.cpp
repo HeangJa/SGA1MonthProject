@@ -24,11 +24,13 @@ HRESULT gameNode::init(bool bInit)
 
 	if (_managerInit)
 	{
-		//SetTimer(g_hWnd, 1, 10, NULL);
 		KEYMANAGER->init();
 		IMAGEMANAGER->init();
 		TIMEMANAGER->init();
 		NUMBERMANAGER->init();
+
+		// singletonBase Class Init
+		ITEMS->init();
 	}
 
 	return S_OK;

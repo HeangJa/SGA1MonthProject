@@ -10,7 +10,7 @@ Items::~Items()
 {
 }
 
-void Items::init()
+HRESULT Items::init()
 {
 	blueItem = IMAGEMANAGER->addImage(TEXT("BlueItem"), TEXT("Image\\blueitem.bmp"),
 		16, 16, true, RGB(255, 255, 255));
@@ -19,6 +19,8 @@ void Items::init()
 		16, 16, true, RGB(255, 255, 255));
 
 	ITEMINFO itemInfo = { 0 };
+
+	return S_OK;
 }
 
 void Items::createItem(int type, float x, float y)

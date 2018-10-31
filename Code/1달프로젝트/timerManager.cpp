@@ -63,7 +63,7 @@ float timerManager::getWorldTime() const
 	return _timer->getWorldTime();
 }
 
-float timerManager::getIngameSceneTime(float ingameStartTime) const
+float timerManager::setTime(float time) const
 {
-	return _timer->getWorldTime() - ingameStartTime;
+	return _timer->getWorldTime() - time;
 }

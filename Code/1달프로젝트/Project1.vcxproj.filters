@@ -138,9 +138,6 @@
     <ClCompile Include="EnemyObject.cpp">
       <Filter>Class</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyBullet.cpp">
-      <Filter>Class</Filter>
-    </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Class</Filter>
     </ClCompile>
@@ -243,9 +240,6 @@
       <Filter>MainGame</Filter>
     </ClInclude>
     <ClInclude Include="EnemyObject.h">
-      <Filter>Class</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyBullet.h">
       <Filter>Class</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">

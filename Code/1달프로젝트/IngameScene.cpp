@@ -52,10 +52,9 @@ HRESULT InGameScene::init()
 	filePath = "Score.txt";
 	setHighScore();
 
-	// 오브젝트들 초기화
+	// init()
 	PLAYER->init();
 	ENEMYOBJECT->init();
-	ITEMS->init();
 
 	SOUNDMANAGER->Play(TEXT("Field"), 0.2f);
 
@@ -93,8 +92,7 @@ void InGameScene::update()
 		PLAYER->update();
 
 		// 적 오브젝트
-		ENEMYOBJECT->createEnemy(TIMEMANAGER->getIngameSceneTime(ingameStartTime));
-		ENEMYOBJECT->moveEnemy();
+		ENEMYOBJECT->update(TIMEMANAGER->setTime(ingameStartTime));
 
 		// 아이템
 		ITEMS->moveItem();
@@ -146,7 +144,7 @@ void InGameScene::render()
 
 	// 경과시간
 	TCHAR szTemp[100] = { 0, };
-	_stprintf(szTemp, TEXT("경과시간 : %f"), TIMEMANAGER->getIngameSceneTime(ingameStartTime));
+	_stprintf(szTemp, TEXT("경과시간 : %f, %f"), TIMEMANAGER->setTime(ingameStartTime), ingameStartTime);
 	TextOut(getMemDC(), 540, 300, szTemp, _tcslen(szTemp));
 }
 

@@ -11,8 +11,7 @@ private:
 	{
 		int   type;
 		int	  state;
-		float x;
-		float y;
+		float x, y;
 		float angle;
 		float speed;
 		float gravity;
@@ -31,7 +30,7 @@ public:
 	Items();
 	~Items();
 
-	void init();
+	HRESULT init();
 	void createItem(int type, float x, float y);
 	void moveItem();
 	void render(HDC hdc);

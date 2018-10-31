@@ -21,7 +21,6 @@
 #define NUMBERMANAGER	NumberManager::getSingleton()
 #define PLAYER			Player::getSingleton()
 #define ENEMYOBJECT		EnemyObject::getSingleton()
-#define ENEMYBULLET		EnemyBullet::getSingleton()
 #define COLLISION		Collision::getSingleton()
 #define ITEMS			Items::getSingleton()
 
@@ -42,6 +41,9 @@
 #define CREATESUPPORTBULLETDELAY			3
 #define ITEM_SCAN_RANGE						120
 #define RED_ITEM_POWER						2
+#define ENEMY_TOTALNUM						100
+#define CREATE_ENEMY_BULLET_DISTANCE		10
+#define FIRST_BULLET_TIME_AFTER_CREATE		2
 
 
 enum SELECT_STATE
@@ -148,4 +150,12 @@ enum ITEM_SCORE
 {
 	BLUE_ITEM_SCORE = 200,
 	RED_ITEM_SCORE = 100
+};
+
+enum ENEMY_BULLET_TYPE
+{
+	ONCE_SHOT,
+	INTERVAL_SHOT,
+	RAPID_SHOT,
+	MULTIPLE_SHOT
 };

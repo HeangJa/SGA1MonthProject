@@ -121,7 +121,6 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectManager.cpp" />
-    <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="GameClearScene.cpp" />
     <ClCompile Include="gameNode.cpp" />
@@ -156,7 +155,6 @@
     <ClInclude Include="CustomDefine.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectManager.h" />
-    <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameClearScene.h" />

@@ -19,6 +19,6 @@ public:
 
 	float					getElapsedTime() const;
 	float					getWorldTime() const;
-	float					getIngameSceneTime(float ingameStartTime) const;
+	float					setTime(float time) const;
 };
 

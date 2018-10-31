@@ -179,8 +179,8 @@ void Player::update()
 	}
 
 	// 플레이어 좌표
-	playerPosX = playerImage->getX() + 32;
-	playerPosY = playerImage->getY() + 48;
+	playerPosX = playerImage->getX() + 16;
+	playerPosY = playerImage->getY() + 24;
 		
 	// 탄 이동
 	moveBullet();
@@ -324,6 +324,7 @@ void Player::createBullet()
 	SOUNDMANAGER->Play(TEXT("PlayerAttack"), 0.2f);
 
 	// 기본 탄1(중심점)
+	bullet.state = ALIVE;
 	bullet.x = playerImage->getX();
 	bullet.y = playerImage->getY();
 	bullet.diameter = load_bullet[NORMAL].diameter;
@@ -369,9 +370,10 @@ void Player::moveBullet()
 		(*p_Bullet_it).x += cosf((*p_Bullet_it).angle) * (*p_Bullet_it).speed;
 		(*p_Bullet_it).y -= sinf((*p_Bullet_it).angle) * (*p_Bullet_it).speed;
 
-		// 맵 경계 밖으로 나갔는지 확인
+		// 맵 경계 밖으로 나갔거나 충돌한 경우 제거
 		if ((*p_Bullet_it).x < F_LEFT || (*p_Bullet_it).x > F_RIGHT ||
-			(*p_Bullet_it).y < F_UP || (*p_Bullet_it).y > F_DOWN)
+			(*p_Bullet_it).y < F_UP || (*p_Bullet_it).y > F_DOWN ||
+			(*p_Bullet_it).state == DEAD)
 			p_Bullet_it = p_Bullet.erase(p_Bullet_it);
 		else
 			p_Bullet_it++;

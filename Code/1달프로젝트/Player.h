@@ -39,6 +39,7 @@ private:
 
 	typedef struct tagbulletinfo
 	{
+		int   state;
 		float x, y;
 		float diameter;
 		float angle;

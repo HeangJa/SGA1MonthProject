@@ -40,7 +40,6 @@ using namespace std;
 #include "util.h"
 #include "Player.h"
 #include "EnemyObject.h"
-#include "EnemyBullet.h"
 #include "Collision.h"
 #include "Items.h"
 
