@@ -20,16 +20,16 @@ HRESULT GameOverScene::init()
 	gameover->setX(125);
 	gameover->setY(100);
 
-	retry = IMAGEMANAGER->addImage(TEXT("Retry"), TEXT("Image\\retry.bmp"),
+	go_retry = IMAGEMANAGER->addImage(TEXT("Retry"), TEXT("Image\\retry.bmp"),
 		270, 39, true, RGB(255, 255, 255));
-	retry->setX(280);
-	retry->setY(300);
+	go_retry->setX(280);
+	go_retry->setY(300);
 	retryAlpha = OPAQUE_;
 
-	returntomenu = IMAGEMANAGER->addImage(TEXT("ReturnToMenu"), TEXT("Image\\returntomenu.bmp"),
+	go_returntomenu = IMAGEMANAGER->addImage(TEXT("ReturnToMenu"), TEXT("Image\\returntomenu.bmp"),
 		336, 39, true, RGB(255, 255, 255));
-	returntomenu->setX(250);
-	returntomenu->setY(400);
+	go_returntomenu->setX(250);
+	go_returntomenu->setY(400);
 	returntomenuAlpha = TRANSLUCENT_;
 
 	currentMenu = RETRY;
@@ -87,6 +87,6 @@ void GameOverScene::render()
 {
 	IMAGEMANAGER->render(TEXT("GameOverScene"), getMemDC(), 0, 0);
 	gameover->render(getMemDC());
-	retry->alphaRender(getMemDC(), retryAlpha);
-	returntomenu->alphaRender(getMemDC(), returntomenuAlpha);
+	go_retry->alphaRender(getMemDC(), retryAlpha);
+	go_returntomenu->alphaRender(getMemDC(), returntomenuAlpha);
 }

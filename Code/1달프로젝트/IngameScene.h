@@ -8,8 +8,14 @@ private:
 	Image*	battleField[2];
 	Image*	lifeImage;
 	Image*	stage1Image;
+	Image*  ig_returntogame;
+	Image*  ig_retry;
+	Image*	ig_returntomenu;
+
+	int		pauseImageAlpha[3];
 
 	int		state;
+	int		currentSelected;
 
 	int		highScore;
 

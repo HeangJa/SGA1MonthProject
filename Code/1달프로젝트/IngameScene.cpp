@@ -39,7 +39,26 @@ HRESULT InGameScene::init()
 	stage1Image->setX(150);
 	stage1Image->setY(260);
 
+	ig_returntogame = IMAGEMANAGER->addImage(TEXT("ReturnToGame"), TEXT("Image\\returntogame.bmp"),
+		300, 42, true, RGB(255, 255, 255));
+	ig_returntogame->setX(250);
+	ig_returntogame->setY(200);
+	pauseImageAlpha[RETURNTOGAME] = OPAQUE_;
+
+	ig_retry = IMAGEMANAGER->addImage(TEXT("Retry"), TEXT("Image\\retry.bmp"),
+		270, 39, true, RGB(255, 255, 255));
+	ig_retry->setX(280);
+	ig_retry->setY(300);
+	pauseImageAlpha[RETRY] = TRANSLUCENT_;
+
+	ig_returntomenu = IMAGEMANAGER->addImage(TEXT("ReturnToMenu"), TEXT("Image\\returntomenu.bmp"),
+		336, 39, true, RGB(255, 255, 255));
+	ig_returntomenu->setX(250);
+	ig_returntomenu->setY(400);
+	pauseImageAlpha[RETURNTOMENU] = TRANSLUCENT_;
+
 	state = PLAYING;
+	currentSelected = RETURNTOGAME;
 
 	ingameStartTime = TIMEMANAGER->getWorldTime();
 
@@ -70,10 +89,21 @@ void InGameScene::update()
 {
 	if (state == PLAYING)
 	{
+		// ESC를 누르면 일시정지
+		if (KEYMANAGER->isOnceKeyDown('P'))
+		{
+			SOUNDMANAGER->Pause(TEXT("Field"));
+			SOUNDMANAGER->Play(TEXT("Pause"), 0.2f);
+			state = PAUSE;
+		}			
+
 		// 플레이어가 죽으면 게임오버씬으로 이동
 		if (PLAYER->getPlayerLife() == 0)
 		{
 			SOUNDMANAGER->Stop(TEXT("Field"));
+			PLAYER->release();
+			ENEMYOBJECT->release();
+			ITEMS->release();
 			SCENEMANAGER->ChangeScene(TEXT("GameOverScene"));
 		}
 
@@ -105,7 +135,52 @@ void InGameScene::update()
 
 	else if (state == PAUSE)
 	{
+		if (KEYMANAGER->isOnceKeyDown(VK_UP))
+		{
+			if (currentSelected != RETURNTOGAME)
+			{
+				SOUNDMANAGER->Play(TEXT("Select"), 0.2f);
+				pauseImageAlpha[currentSelected] = TRANSLUCENT_;
+				currentSelected--;
+				pauseImageAlpha[currentSelected] = OPAQUE_;
+			}
+		}
 
+		if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
+		{
+			if (currentSelected != RETURNTOMENU)
+			{
+				SOUNDMANAGER->Play(TEXT("Select"), 0.2f);
+				pauseImageAlpha[currentSelected] = TRANSLUCENT_;
+				currentSelected++;
+				pauseImageAlpha[currentSelected] = OPAQUE_;
+			}
+		}
+
+		if (KEYMANAGER->isOnceKeyDown('Z'))
+		{
+			SOUNDMANAGER->Play(TEXT("Ok"), 0.2f);
+			switch(currentSelected)
+			{
+			case RETURNTOGAME:
+				SOUNDMANAGER->Resume(TEXT("Field"));
+				state = PLAYING;
+				break;
+
+			case RETRY:
+				PLAYER->release();
+				ENEMYOBJECT->release();
+				ITEMS->release();
+				init();
+				state = PLAYING;
+				break;
+
+			case RETURNTOMENU:
+				SOUNDMANAGER->Stop(TEXT("Field"));
+				SCENEMANAGER->ChangeScene(TEXT("MenuScene"));
+				break;
+			}
+		}
 	}
 }
 
@@ -148,6 +223,14 @@ void InGameScene::render()
 
 	//충돌
 	COLLISION->effectRender(getMemDC());
+
+	// 일시정지일 때
+	if(state == PAUSE)
+	{
+		ig_returntogame->alphaRender(getMemDC(), pauseImageAlpha[RETURNTOGAME]);
+		ig_retry->alphaRender(getMemDC(), pauseImageAlpha[RETRY]);
+		ig_returntomenu->alphaRender(getMemDC(), pauseImageAlpha[RETURNTOMENU]);
+	}
 
 	// 경과시간
 	TCHAR szTemp[100] = { 0, };

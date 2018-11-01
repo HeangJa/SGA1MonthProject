@@ -23,6 +23,11 @@ HRESULT Items::init()
 	return S_OK;
 }
 
+void Items::release()
+{
+	itemList.clear();
+}
+
 void Items::createItem(int type, float x, float y)
 {
 	itemInfo.type = type;
@@ -42,6 +47,10 @@ void Items::moveItem()
 	itemList_it = itemList.begin();
 	for (; itemList_it != itemList.end();)
 	{
+		// 플레이어가 특정 위치 위에 존재하면 속성변경
+		if(PLAYER->getPlayerPosY() < PLAYER_GET_ALL_ITEM_POS_Y)
+			(*itemList_it).state = TOPLAYER;
+
 		// 탐지 거리 내에 플레이어가 있으면 속성변경
 		if ((UTIL::getDistance((*itemList_it).x, (*itemList_it).y, PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY())) < ITEM_SCAN_RANGE)
 		{
@@ -51,7 +60,7 @@ void Items::moveItem()
 		// 탐지 거래 내 플레이어에게로 이동
 		if ((*itemList_it).state == TOPLAYER)
 		{
-			(*itemList_it).speed = 7.f;
+			(*itemList_it).speed = 8.f;
 			(*itemList_it).x += (cosf(UTIL::getAngle((*itemList_it).x, (*itemList_it).y, PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY())) * (*itemList_it).speed);
 			(*itemList_it).y += (-sinf(UTIL::getAngle((*itemList_it).x, (*itemList_it).y, PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY())) * (*itemList_it).speed);
 
@@ -95,15 +104,20 @@ void Items::render(HDC hdc)
 	itemList_it = itemList.begin();
 	for (; itemList_it != itemList.end(); itemList_it++)
 	{
-		if ((*itemList_it).type == BLUE_ITEM)
+		// 필드 내 있을 때
+		if ((*itemList_it).x > F_LEFT && (*itemList_it).x < F_RIGHT &&
+			(*itemList_it).y > F_UP && (*itemList_it).y < F_DOWN)
 		{
-			blueItem->render(hdc, (*itemList_it).x - 8, (*itemList_it).y - 8);
-		}
+			if ((*itemList_it).type == BLUE_ITEM)
+			{
+				blueItem->render(hdc, (*itemList_it).x - 8, (*itemList_it).y - 8);
+			}
 
-		else if ((*itemList_it).type == RED_ITEM)
-		{
-			redItem->render(hdc, (*itemList_it).x - 8, (*itemList_it).y - 8);
-		}
+			else if ((*itemList_it).type == RED_ITEM)
+			{
+				redItem->render(hdc, (*itemList_it).x - 8, (*itemList_it).y - 8);
+			}
+		}		
 	}
 
 	// 디버그용

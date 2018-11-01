@@ -22,8 +22,8 @@ HRESULT mainGame::init()
 {
 	gameNode::init(true);
 
-	//if (SOUNDMANAGER->Init() == false)
-		//return S_FALSE;
+	if (SOUNDMANAGER->Init() == false)
+		return S_FALSE;
 
 	SOUNDMANAGER->AddSound(TEXT("Menu"), TEXT("Sound\\Menu.wav"), true, true);
 	SOUNDMANAGER->AddSound(TEXT("Select"), TEXT("Sound\\Select.wav"), false, false);
@@ -70,7 +70,12 @@ void mainGame::update()
 		SCENEMANAGER->ChangeScene(TEXT("MenuScene"));
 
 	if (KEYMANAGER->isOnceKeyDown(VK_F3))
+	{
+		PLAYER->release();
+		ENEMYOBJECT->release();
+		ITEMS->release();
 		SCENEMANAGER->ChangeScene(TEXT("SelectScene"));
+	}		
 
 	if (KEYMANAGER->isOnceKeyDown(VK_F4))
 		SCENEMANAGER->ChangeScene(TEXT("InGameScene"));

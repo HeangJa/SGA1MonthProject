@@ -17,10 +17,10 @@
       <bulletType value = "0"/>
       <isFire value = "0"/>
       <bulletCount value = "0"/>
-      <bulletCountLimit value = "3"/>
+      <bulletCountLimit value = "0"/>
       <lastBulletFireTime value = "0"/>
-      <nextBulletTermTime value = "0.2"/>
-      <reloadTime value = "1"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "0"/>
     </Fairy0>
     <Fairy1>
       <type value = "0"/>
@@ -132,5 +132,271 @@
       <nextBulletTermTime value = "0"/>
       <reloadTime value = "0"/>
     </Fairy5>
+    <Fairy6>
+      <type value = "1"/>
+      <state value = "3"/>
+      <createTime value = "20"/>
+      <x value = "95"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy6>
+    <Fairy7>
+      <type value = "1"/>
+      <state value = "3"/>
+      <createTime value = "20"/>
+      <x value = "465"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy7>
+    <Fairy8>
+      <type value = "1"/>
+      <state value = "3"/>
+      <createTime value = "21"/>
+      <x value = "150"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy8>
+    <Fairy9>
+      <type value = "1"/>
+      <state value = "3"/>
+      <createTime value = "21"/>
+      <x value = "410"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy9>
+    <Fairy10>
+      <type value = "0"/>
+      <state value = "3"/>
+      <createTime value = "22"/>
+      <x value = "205"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy10>
+    <Fairy11>
+      <type value = "0"/>
+      <state value = "3"/>
+      <createTime value = "22"/>
+      <x value = "355"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy11>
   </Wave1>
+  <Wave2>
+    <Fairy0>
+      <type value = "1"/>
+      <state value = "3"/>
+      <createTime value = "100"/>
+      <x value = "95"/>
+      <y value = "0"/>
+      <diameter value = "0"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy0>
+    <Fairy1>
+      <type value = "1"/>
+      <state value = "3"/>
+      <createTime value = "100"/>
+      <x value = "465"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy1>
+    <Fairy2>
+      <type value = "1"/>
+      <state value = "3"/>
+      <createTime value = "100"/>
+      <x value = "150"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy2>
+    <Fairy3>
+      <type value = "1"/>
+      <state value = "3"/>
+      <createTime value = "100"/>
+      <x value = "410"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy3>
+    <Fairy4>
+      <type value = "0"/>
+      <state value = "3"/>
+      <createTime value = "100"/>
+      <x value = "205"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy4>
+    <Fairy5>
+      <type value = "0"/>
+      <state value = "3"/>
+      <createTime value = "100"/>
+      <x value = "355"/>
+      <y value = "0"/>
+      <diameter value = "32"/>
+      <angle value = "1"/>
+      <speed value = "2"/>
+      <hp value = "2"/>
+      <imageFrameX value = "0"/>
+      <existingTime value = "0"/>
+      <moveType value = "0"/>
+      <moveTimer value = "0"/>
+      <bulletType value = "0"/>
+      <isFire value = "0"/>
+      <bulletCount value = "0"/>
+      <bulletCountLimit value = "0"/>
+      <lastBulletFireTime value = "0"/>
+      <nextBulletTermTime value = "0"/>
+      <reloadTime value = "2"/>
+    </Fairy5>
+  </Wave2>
 </EnemyObject>

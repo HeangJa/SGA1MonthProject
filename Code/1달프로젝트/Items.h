@@ -31,6 +31,7 @@ public:
 	~Items();
 
 	HRESULT init();
+	void release();
 	void createItem(int type, float x, float y);
 	void moveItem();
 	void render(HDC hdc);

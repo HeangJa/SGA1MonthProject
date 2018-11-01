@@ -64,7 +64,7 @@ void Player::init()
 	playerDiameter = 10;
 	playerSpeed = NORMAL_SPEED;
 	playerAlpha = OPAQUE_;
-	isPlayerDead = true;
+	isPlayerDead = false;
 	isPlayerInvincible = false;
 	playerInvincibleTimer = 0;
 	playerScore = 0;
@@ -85,11 +85,7 @@ void Player::init()
 
 void Player::release()
 {
-	if (playerType == REIMU)
-		IMAGEMANAGER->deleteImage(TEXT("Reimu"));
-
-	if (playerType == MARISA)
-		IMAGEMANAGER->deleteImage(TEXT("Marisa"));
+	p_Bullet.clear();
 }
 
 void Player::update()
@@ -212,7 +208,7 @@ void Player::render(HDC hdc)
 		playerShiftImage->getWidth(), playerShiftImage->getHeight(), NULL, vertices[0].x, vertices[0].y);
 	
 	// 플레이어
-	playerImage->alphaRender(hdc, playerImage->getX(), playerImage->getY(), 
+	playerImage->alphaRender(hdc, playerImage->getX(), playerImage->getY(),
 		playerImage->getFrameX(), playerImage->getFrameY(), playerAlpha);
 
 	// SHIFT누를 때
@@ -239,15 +235,34 @@ void Player::ifPlayerDead()
 		isPlayerDead = false;
 		isPlayerInvincible = true;
 		playerAlpha = TRANSLUCENT_;
-		playerImage->setX(270);
-		playerImage->setY(500);
+
+		for (int i = 0; i < playerPower / 4; i++)
+		{
+			ITEMS->createItem(BLUE_ITEM, RND->getFromIntTo(playerImage->getX() - 50, playerImage->getX() + 50),
+				RND->getFromIntTo(playerImage->getY() - 50, playerImage->getY() + 50));
+			ITEMS->createItem(RED_ITEM, RND->getFromIntTo(playerImage->getX() - 50, playerImage->getX() + 50),
+				RND->getFromIntTo(playerImage->getY() - 50, playerImage->getY() + 50));
+		}
+		playerPower = 0;
+
+		playerImage->setX(10000);
+		playerImage->setY(10000);
 	}
 
 	// 무적 시간동안
 	if (isPlayerInvincible == true)
 	{
 		playerInvincibleTimer++;
+
+		if (playerInvincibleTimer == 60)
+		{
+			playerImage->setX(270);
+			playerImage->setY(520);
+		}
 		
+		if(playerInvincibleTimer > 60)
+			playerImage->setY(playerImage->getY() - 1);
+
 		if (playerInvincibleTimer == PLAYER_INVINCIBLE_DELAY)
 		{
 			playerAlpha = OPAQUE_;
@@ -408,7 +423,4 @@ void Player::renderBullet(HDC hdc)
 	Rectangle(hdc, 530, 280, 750, 580);
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("플레이어 총알 개수 : %d"), p_Bullet.size());
 	TextOut(hdc, 540, 330, szTemp, _tcslen(szTemp));
-
-	_stprintf_s(szTemp, sizeof(szTemp), TEXT("플레이어 라이프 : %d"), playerLife);
-	TextOut(hdc, 540, 500, szTemp, _tcslen(szTemp));
 }

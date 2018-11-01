@@ -74,97 +74,101 @@ void EnemyObject::loadEnemyFile()
 
 	XmlElement* EnemyObject = doc->FirstChildElement(TEXT("EnemyObject"));
 	XmlElement* wave = EnemyObject->FirstChildElement(TEXT("Wave1"));
-	XmlElement* fairy = wave->FirstChildElement(TEXT("Fairy0"));
 
 	XmlAttribute* value;
-
-	for (; fairy != NULL; fairy = fairy->NextSiblingElement(), i++)
+	for (; wave != NULL; wave = wave->NextSiblingElement())
 	{
-		XmlElement* type = fairy->FirstChildElement();
-		value = (XmlAttribute*)type->FirstAttribute();
-		enemyObject[i].type = atoi(value->Value());
+		XmlElement* fairy = wave->FirstChildElement(TEXT("Fairy0"));
+		for (; fairy != NULL; fairy = fairy->NextSiblingElement(), i++)
+		{
+			if (i == 6)
+				i = 6;
+			XmlElement* type = fairy->FirstChildElement();
+			value = (XmlAttribute*)type->FirstAttribute();
+			enemyObject[i].type = atoi(value->Value());
 
-		XmlElement* state = type->NextSiblingElement();
-		value = (XmlAttribute*)state->FirstAttribute();
-		enemyObject[i].state = atoi(value->Value());
+			XmlElement* state = type->NextSiblingElement();
+			value = (XmlAttribute*)state->FirstAttribute();
+			enemyObject[i].state = atoi(value->Value());
 
-		XmlElement* createTime = state->NextSiblingElement();
-		value = (XmlAttribute*)createTime->FirstAttribute();
-		enemyObject[i].createTime = strtod(value->Value(), 0);
+			XmlElement* createTime = state->NextSiblingElement();
+			value = (XmlAttribute*)createTime->FirstAttribute();
+			enemyObject[i].createTime = strtod(value->Value(), 0);
 
-		XmlElement* x = createTime->NextSiblingElement();
-		value = (XmlAttribute*)x->FirstAttribute();
-		enemyObject[i].x = atoi(value->Value());
+			XmlElement* x = createTime->NextSiblingElement();
+			value = (XmlAttribute*)x->FirstAttribute();
+			enemyObject[i].x = atoi(value->Value());
 
-		XmlElement* y = x->NextSiblingElement();
-		value = (XmlAttribute*)y->FirstAttribute();
-		enemyObject[i].y = atoi(value->Value());
+			XmlElement* y = x->NextSiblingElement();
+			value = (XmlAttribute*)y->FirstAttribute();
+			enemyObject[i].y = atoi(value->Value());
 
-		XmlElement* diameter = y->NextSiblingElement();
-		value = (XmlAttribute*)diameter->FirstAttribute();
-		enemyObject[i].diameter = atoi(value->Value());
+			XmlElement* diameter = y->NextSiblingElement();
+			value = (XmlAttribute*)diameter->FirstAttribute();
+			enemyObject[i].diameter = atoi(value->Value());
 
-		XmlElement* angle = diameter->NextSiblingElement();
-		value = (XmlAttribute*)angle->FirstAttribute();
-		enemyObject[i].angle = strtod(value->Value(), 0);
+			XmlElement* angle = diameter->NextSiblingElement();
+			value = (XmlAttribute*)angle->FirstAttribute();
+			enemyObject[i].angle = strtod(value->Value(), 0);
 
-		XmlElement* speed = angle->NextSiblingElement();
-		value = (XmlAttribute*)speed->FirstAttribute();
-		enemyObject[i].speed = strtod(value->Value(), 0);
+			XmlElement* speed = angle->NextSiblingElement();
+			value = (XmlAttribute*)speed->FirstAttribute();
+			enemyObject[i].speed = strtod(value->Value(), 0);
 
-		XmlElement* hp = speed->NextSiblingElement();
-		value = (XmlAttribute*)hp->FirstAttribute();
-		enemyObject[i].hp = atoi(value->Value());
+			XmlElement* hp = speed->NextSiblingElement();
+			value = (XmlAttribute*)hp->FirstAttribute();
+			enemyObject[i].hp = atoi(value->Value());
 
-		XmlElement* imageFrameX = hp->NextSiblingElement();
-		value = (XmlAttribute*)imageFrameX->FirstAttribute();
-		enemyObject[i].imageFrameX = atoi(value->Value());
+			XmlElement* imageFrameX = hp->NextSiblingElement();
+			value = (XmlAttribute*)imageFrameX->FirstAttribute();
+			enemyObject[i].imageFrameX = atoi(value->Value());
 
-		XmlElement* existingTime = imageFrameX->NextSiblingElement();
-		value = (XmlAttribute*)existingTime->FirstAttribute();
-		enemyObject[i].existingTime = strtod(value->Value(), 0);
+			XmlElement* existingTime = imageFrameX->NextSiblingElement();
+			value = (XmlAttribute*)existingTime->FirstAttribute();
+			enemyObject[i].existingTime = strtod(value->Value(), 0);
 
-		XmlElement* moveType = existingTime->NextSiblingElement();
-		value = (XmlAttribute*)moveType->FirstAttribute();
-		enemyObject[i].moveType = atoi(value->Value());
+			XmlElement* moveType = existingTime->NextSiblingElement();
+			value = (XmlAttribute*)moveType->FirstAttribute();
+			enemyObject[i].moveType = atoi(value->Value());
 
-		XmlElement* moveTimer = moveType->NextSiblingElement();
-		value = (XmlAttribute*)moveTimer->FirstAttribute();
-		enemyObject[i].moveTimer = atoi(value->Value());
+			XmlElement* moveTimer = moveType->NextSiblingElement();
+			value = (XmlAttribute*)moveTimer->FirstAttribute();
+			enemyObject[i].moveTimer = atoi(value->Value());
 
-		XmlElement* bulletType = moveTimer->NextSiblingElement();
-		value = (XmlAttribute*)bulletType->FirstAttribute();
-		enemyObject[i].bulletType = atoi(value->Value());
+			XmlElement* bulletType = moveTimer->NextSiblingElement();
+			value = (XmlAttribute*)bulletType->FirstAttribute();
+			enemyObject[i].bulletType = atoi(value->Value());
 
-		XmlElement* isFire = bulletType->NextSiblingElement();
-		value = (XmlAttribute*)isFire->FirstAttribute();
-		enemyObject[i].isFire = atoi(value->Value());
+			XmlElement* isFire = bulletType->NextSiblingElement();
+			value = (XmlAttribute*)isFire->FirstAttribute();
+			enemyObject[i].isFire = atoi(value->Value());
 
-		XmlElement* bulletCount = isFire->NextSiblingElement();
-		value = (XmlAttribute*)bulletCount->FirstAttribute();
-		enemyObject[i].bulletCount = atoi(value->Value());
+			XmlElement* bulletCount = isFire->NextSiblingElement();
+			value = (XmlAttribute*)bulletCount->FirstAttribute();
+			enemyObject[i].bulletCount = atoi(value->Value());
 
-		XmlElement* bulletCountLimit = bulletCount->NextSiblingElement();
-		value = (XmlAttribute*)bulletCountLimit->FirstAttribute();
-		enemyObject[i].bulletCountLimit = atoi(value->Value());
+			XmlElement* bulletCountLimit = bulletCount->NextSiblingElement();
+			value = (XmlAttribute*)bulletCountLimit->FirstAttribute();
+			enemyObject[i].bulletCountLimit = atoi(value->Value());
 
-		XmlElement* lastBulletFireTime = bulletCountLimit->NextSiblingElement();
-		value = (XmlAttribute*)lastBulletFireTime->FirstAttribute();
-		enemyObject[i].lastBulletFireTime = strtod(value->Value(), 0);
+			XmlElement* lastBulletFireTime = bulletCountLimit->NextSiblingElement();
+			value = (XmlAttribute*)lastBulletFireTime->FirstAttribute();
+			enemyObject[i].lastBulletFireTime = strtod(value->Value(), 0);
 
-		XmlElement* nextBulletTermTime = lastBulletFireTime->NextSiblingElement();
-		value = (XmlAttribute*)nextBulletTermTime->FirstAttribute();
-		enemyObject[i].nextBulletTermTime = strtod(value->Value(), 0);
+			XmlElement* nextBulletTermTime = lastBulletFireTime->NextSiblingElement();
+			value = (XmlAttribute*)nextBulletTermTime->FirstAttribute();
+			enemyObject[i].nextBulletTermTime = strtod(value->Value(), 0);
 
-		XmlElement* reloadTime = nextBulletTermTime->NextSiblingElement();
-		value = (XmlAttribute*)reloadTime->FirstAttribute();
-		enemyObject[i].reloadTime = atoi(value->Value());
+			XmlElement* reloadTime = nextBulletTermTime->NextSiblingElement();
+			value = (XmlAttribute*)reloadTime->FirstAttribute();
+			enemyObject[i].reloadTime = atoi(value->Value());
+		}
 	}
 }
 
 void EnemyObject::createEnemy(float ingameCurrentTime)
 {
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		if (enemyObject[i].createTime < ingameCurrentTime + 10 && enemyObject[i].state == NOTCREATE)
 		{
@@ -177,6 +181,9 @@ void EnemyObject::createEnemy(float ingameCurrentTime)
 
 void EnemyObject::moveEnemy(float ingameCurrentTime)
 {
+	if (e_Object.size() == 0)
+		enemyStayTimer = 0;
+
 	e_Object_it = e_Object.begin();
 	for (; e_Object_it != e_Object.end();)
 	{
@@ -185,7 +192,7 @@ void EnemyObject::moveEnemy(float ingameCurrentTime)
 
 		// 필드 내 존재 시 상태변경
 		if ((*e_Object_it).x > F_LEFT && (*e_Object_it).x < F_RIGHT &&
-			(*e_Object_it).y > F_UP && (*e_Object_it).y < F_DOWN)
+			(*e_Object_it).y > F_UP && (*e_Object_it).y < F_DOWN && (*e_Object_it).state == CREATE)
 		{
 			(*e_Object_it).state = ALIVE;
 		}
@@ -527,7 +534,7 @@ void EnemyObject::render(HDC hdc)
 		if ((*e_Bullet_it).type == ONCE_SHOT || (*e_Bullet_it).type == INTERVAL_SHOT ||
 			(*e_Bullet_it).type == RAPID_SHOT)
 		{
-			e_BulletImage2->frameRender(hdc, (*e_Bullet_it).x - 12, (*e_Bullet_it).y - 12, (*e_Bullet_it).imageFrameX, (*e_Bullet_it).imageFrameY);
+			e_BulletImage2->frameRender(hdc, (*e_Bullet_it).x - 8, (*e_Bullet_it).y - 8, (*e_Bullet_it).imageFrameX, (*e_Bullet_it).imageFrameY);
 
 			// 디버그용
 			if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))

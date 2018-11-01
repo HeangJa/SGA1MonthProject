@@ -5,8 +5,8 @@ class GameOverScene : public gameNode
 {
 private:
 	Image*  gameover;
-	Image*  retry;
-	Image*	returntomenu;
+	Image*  go_retry;
+	Image*	go_returntomenu;
 
 	int		currentMenu;
 	int		retryAlpha;
