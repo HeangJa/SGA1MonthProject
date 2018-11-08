@@ -24,7 +24,8 @@ public:
 		int   bulletCountLimit;
 		float lastBulletFireTime;
 		float nextBulletTermTime;
-		int   reloadTime;
+		float reloadTime;
+		float firstAngle;
 	}E_OBJECT;
 
 	typedef struct tagenemybulletinfo

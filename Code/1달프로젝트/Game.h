@@ -42,6 +42,7 @@ using namespace std;
 #include "EnemyObject.h"
 #include "Collision.h"
 #include "Items.h"
+#include "Boss.h"
 
 //
 #include "MacroDefine.h"

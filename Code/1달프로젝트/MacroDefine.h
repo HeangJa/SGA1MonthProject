@@ -23,6 +23,7 @@
 #define ENEMYOBJECT		EnemyObject::getSingleton()
 #define COLLISION		Collision::getSingleton()
 #define ITEMS			Items::getSingleton()
+#define BOSS			Boss::getSingleton()
 
 
 #define SAFE_DELETE(p)	{ if(p) { delete(p); (p) = NULL; }}
@@ -42,7 +43,7 @@
 #define ITEM_SCAN_RANGE						120
 #define RED_ITEM_POWER						2
 #define ENEMY_TOTALNUM						100
-#define CREATE_ENEMY_BULLET_DISTANCE		10
+#define CREATE_ENEMY_BULLET_DISTANCE		20
 #define FIRST_BULLET_TIME_AFTER_CREATE		2
 #define PLAYER_GET_ALL_ITEM_POS_Y			150
 
@@ -159,4 +160,13 @@ enum ENEMY_BULLET_TYPE
 	INTERVAL_SHOT,
 	RAPID_SHOT,
 	MULTIPLE_SHOT
+};
+
+enum BOSS_PATTERN
+{
+	APPEAR,
+	PATTERN0,
+	PATTERN1,
+	PATTERN2,
+	PATTERN3
 };

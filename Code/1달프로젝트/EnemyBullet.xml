@@ -11,14 +11,14 @@
     <imageFrameY value = "0"/>
   </Type0>
   <Type1>
-    <type value = "0"/>
+    <type value = "1"/>
     <state value = "3"/>
     <x value = "0"/>
     <y value = "0"/>
     <diameter value = "16"/>
     <angle value = "0"/>
     <speed value = "4"/>
-    <imageFrameX value = "0"/>
+    <imageFrameX value = "9"/>
     <imageFrameY value = "0"/>
   </Type1>
   <Type2>

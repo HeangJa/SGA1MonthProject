@@ -155,10 +155,21 @@ void Player::update()
 	}
 
 	// 플레이어 서포터(왼쪽 위)
-	supporterPos[0] = { (LONG)playerImage->getX() - 8, (LONG)playerImage->getY() - 20 };
-	supporterPos[1] = { (LONG)playerImage->getX() + 32 - 8, (LONG)playerImage->getY() - 20 };
-	supporterPos[2] = { (LONG)playerImage->getX() - 20 - 8, (LONG)playerImage->getY() };
-	supporterPos[3] = { (LONG)playerImage->getX() + 32 + 20 - 8, (LONG)playerImage->getY() };
+	if (KEYMANAGER->isStayKeyDown(VK_LSHIFT) || KEYMANAGER->isStayKeyDown(VK_RSHIFT))
+	{
+		supporterPos[0] = { (LONG)playerImage->getX() - 4, (LONG)playerImage->getY() - 20 };
+		supporterPos[1] = { (LONG)playerImage->getX() + 32 - 12, (LONG)playerImage->getY() - 20 };
+		supporterPos[2] = { (LONG)playerImage->getX() - 20, (LONG)playerImage->getY() - 5 };
+		supporterPos[3] = { (LONG)playerImage->getX() + 32 + 20 - 16, (LONG)playerImage->getY() - 5 };
+	}
+	else
+	{
+		supporterPos[0] = { (LONG)playerImage->getX() - 8, (LONG)playerImage->getY() - 20 };
+		supporterPos[1] = { (LONG)playerImage->getX() + 32 - 8, (LONG)playerImage->getY() - 20 };
+		supporterPos[2] = { (LONG)playerImage->getX() - 20 - 8, (LONG)playerImage->getY() };
+		supporterPos[3] = { (LONG)playerImage->getX() + 32 + 20 - 8, (LONG)playerImage->getY() };
+	}
+	
 
 	// 플레이어 탄
 	if (KEYMANAGER->isStayKeyDown('Z'))
@@ -245,7 +256,7 @@ void Player::ifPlayerDead()
 		}
 		playerPower = 0;
 
-		playerImage->setX(10000);
+		playerImage->setX(270);
 		playerImage->setY(10000);
 	}
 
@@ -383,6 +394,9 @@ void Player::moveBullet()
 	p_Bullet_it = p_Bullet.begin();
 	for (; p_Bullet_it != p_Bullet.end();)
 	{
+		if ((*p_Bullet_it).type == SUPPORT && KEYMANAGER->isStayKeyDown(VK_LSHIFT))
+			(*p_Bullet_it).angle = PI / 2;
+
 		(*p_Bullet_it).x += cosf((*p_Bullet_it).angle) * (*p_Bullet_it).speed;
 		(*p_Bullet_it).y -= sinf((*p_Bullet_it).angle) * (*p_Bullet_it).speed;
 

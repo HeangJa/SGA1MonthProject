@@ -8,6 +8,7 @@ private:
 	Image*	battleField[2];
 	Image*	lifeImage;
 	Image*	stage1Image;
+	Image*	pauseBackground;
 	Image*  ig_returntogame;
 	Image*  ig_retry;
 	Image*	ig_returntomenu;

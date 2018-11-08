@@ -39,6 +39,9 @@ HRESULT InGameScene::init()
 	stage1Image->setX(150);
 	stage1Image->setY(260);
 
+	pauseBackground = IMAGEMANAGER->addImage(TEXT("PauseBackground"), TEXT("Image\\pausebackground.bmp"),
+		800, 600, true, RGB(255, 255, 255));
+
 	ig_returntogame = IMAGEMANAGER->addImage(TEXT("ReturnToGame"), TEXT("Image\\returntogame.bmp"),
 		300, 42, true, RGB(255, 255, 255));
 	ig_returntogame->setX(250);
@@ -74,6 +77,7 @@ HRESULT InGameScene::init()
 	// init()
 	PLAYER->init();
 	ENEMYOBJECT->init();
+	BOSS->init();
 	COLLISION->init();
 
 	SOUNDMANAGER->Play(TEXT("Field"), 0.2f);
@@ -127,6 +131,9 @@ void InGameScene::update()
 
 		// 아이템
 		ITEMS->moveItem();
+
+		// 보스
+		BOSS->update(TIMEMANAGER->setTime(ingameStartTime));
 
 		//충돌
 		COLLISION->collisionCheck();
@@ -221,12 +228,16 @@ void InGameScene::render()
 	// 아이템
 	ITEMS->render(getMemDC());
 
+	// 보스
+	BOSS->render(getMemDC());
+
 	//충돌
 	COLLISION->effectRender(getMemDC());
 
 	// 일시정지일 때
 	if(state == PAUSE)
 	{
+		pauseBackground->alphaRender(getMemDC(), TRANSLUCENT_);
 		ig_returntogame->alphaRender(getMemDC(), pauseImageAlpha[RETURNTOGAME]);
 		ig_retry->alphaRender(getMemDC(), pauseImageAlpha[RETRY]);
 		ig_returntomenu->alphaRender(getMemDC(), pauseImageAlpha[RETURNTOMENU]);

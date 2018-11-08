@@ -144,6 +144,9 @@
     <ClCompile Include="Items.cpp">
       <Filter>Class</Filter>
     </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Class</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -249,6 +252,9 @@
       <Filter>Class</Filter>
     </ClInclude>
     <ClInclude Include="Items.h">
+      <Filter>Class</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
       <Filter>Class</Filter>
     </ClInclude>
   </ItemGroup>

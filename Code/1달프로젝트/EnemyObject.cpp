@@ -55,11 +55,11 @@ void EnemyObject::release()
 
 void EnemyObject::update(float ingameCurrentTime)
 {
-	createEnemy(ingameCurrentTime);
+	//createEnemy(ingameCurrentTime);
+	moveEnemy(ingameCurrentTime);
+
 	if (e_Object.size() > 0)
 		createEnemyBullet(ingameCurrentTime);
-
-	moveEnemy(ingameCurrentTime);
 	if(e_Bullet.size() > 0)
 		moveEnemyBullet();
 }
@@ -73,7 +73,7 @@ void EnemyObject::loadEnemyFile()
 	assert(err == Xml::XML_SUCCESS);
 
 	XmlElement* EnemyObject = doc->FirstChildElement(TEXT("EnemyObject"));
-	XmlElement* wave = EnemyObject->FirstChildElement(TEXT("Wave1"));
+	XmlElement* wave = EnemyObject->FirstChildElement();
 
 	XmlAttribute* value;
 	for (; wave != NULL; wave = wave->NextSiblingElement())
@@ -161,7 +161,14 @@ void EnemyObject::loadEnemyFile()
 
 			XmlElement* reloadTime = nextBulletTermTime->NextSiblingElement();
 			value = (XmlAttribute*)reloadTime->FirstAttribute();
-			enemyObject[i].reloadTime = atoi(value->Value());
+			enemyObject[i].reloadTime = strtod(value->Value(), 0);
+
+			if (enemyObject[i].type == BIGFAIRY)
+			{
+				XmlElement* firstAngle = reloadTime->NextSiblingElement();
+				value = (XmlAttribute*)firstAngle->FirstAttribute();
+				enemyObject[i].firstAngle = strtod(value->Value(), 0);
+			}
 		}
 	}
 }
@@ -198,31 +205,93 @@ void EnemyObject::moveEnemy(float ingameCurrentTime)
 		}
 
 		// 움직임 타입에 따른 이동
+		// 타입0 (Wave0)
 		if ((*e_Object_it).moveType == 0)
 		{
 			if ((*e_Object_it).y > 150)
 			{
 				(*e_Object_it).speed = 0;
-				if(!(enemyStayTimer == 1000))
-					enemyStayTimer++;
 			}
 
-			if (enemyStayTimer == 1000)
+			if ((*e_Object_it).existingTime > 8)
 			{
 				if((*e_Object_it).x < 280)
 					(*e_Object_it).angle = PI * 3 / 4;
 				else
 					(*e_Object_it).angle = PI / 4;
 				(*e_Object_it).speed = 2;
-
-				//(*e_Object_it).state = DEAD;  아이템떨구는 테스트
 			}
 			else
 				(*e_Object_it).angle = PI * 3 / 2;
-			
-			(*e_Object_it).x += (cosf((*e_Object_it).angle) * (*e_Object_it).speed);
-			(*e_Object_it).y += (-sinf((*e_Object_it).angle) * (*e_Object_it).speed);
 		}
+
+		// 타입1 (Wave1 - 1, Wave3)
+		if ((*e_Object_it).moveType == 1)
+		{
+			(*e_Object_it).angle = PI;
+		}
+
+		// 타입2 (Wave1 - 2, Wave3)
+		if ((*e_Object_it).moveType == 2)
+		{
+			(*e_Object_it).angle = 0;
+		}
+
+		// 타입3 (Wave2 - 1)
+		if ((*e_Object_it).moveType == 3)
+		{
+			if ((*e_Object_it).y > 150)
+				(*e_Object_it).angle += 0.02f;
+			else
+				(*e_Object_it).angle = PI * 3 / 2;
+
+			if ((*e_Object_it).angle > 2 * PI)
+				(*e_Object_it).angle = 2 * PI;
+		}
+
+		// 타입4 (Wave2 - 2)
+		if ((*e_Object_it).moveType == 4)
+		{
+			if ((*e_Object_it).y > 150)
+				(*e_Object_it).angle -= 0.02f;
+			else
+				(*e_Object_it).angle = PI * 3 / 2;
+
+			if ((*e_Object_it).angle < PI)
+				(*e_Object_it).angle = PI;
+		}
+
+		// 타입5 (Wave2 - 3, Wave3)
+		if ((*e_Object_it).moveType == 5)
+		{
+			if ((*e_Object_it).y >= 200)
+			{
+				(*e_Object_it).y = 200;
+			}	
+			else
+				(*e_Object_it).angle = PI * 3 / 2;
+
+			if((*e_Object_it).existingTime > 8)
+				(*e_Object_it).angle = PI / 2;
+		}
+
+		// 타입6 (Wave3)
+		if ((*e_Object_it).moveType == 6)
+		{
+			if ((*e_Object_it).y >= 150)
+			{
+				(*e_Object_it).y = 150;
+			}
+			else
+				(*e_Object_it).angle = PI * 3 / 2;
+
+			if ((*e_Object_it).existingTime > 8)
+				(*e_Object_it).angle = PI / 2;
+		}
+
+		// 이동
+		(*e_Object_it).x += (cosf((*e_Object_it).angle) * (*e_Object_it).speed);
+		(*e_Object_it).y += (-sinf((*e_Object_it).angle) * (*e_Object_it).speed);
 
 		// 각도에 따른 애니메이션
 		// 왼쪽
@@ -251,7 +320,7 @@ void EnemyObject::moveEnemy(float ingameCurrentTime)
 				if (!((*e_Object_it).imageFrameX >= 8 && (*e_Object_it).imageFrameX <= 10))
 					(*e_Object_it).imageFrameX = 8;
 
-				if ((*e_Object_it).moveTimer == MOTION_DELAY)
+				if ((*e_Object_it).moveTimer == MOTION_DELAY * 2)
 				{
 					(*e_Object_it).moveTimer = 0;
 					(*e_Object_it).imageFrameX++;
@@ -265,7 +334,7 @@ void EnemyObject::moveEnemy(float ingameCurrentTime)
 		}
 
 		// 오른쪽
-		else if ( !((*e_Object_it).angle > (PI / 2) && (*e_Object_it).angle < (3 * PI / 2))
+		else if (!((*e_Object_it).angle > (PI / 2) && (*e_Object_it).angle < (3 * PI / 2))
 			&& (*e_Object_it).speed > 0)
 		{
 			if ((*e_Object_it).type < 3)
@@ -290,7 +359,7 @@ void EnemyObject::moveEnemy(float ingameCurrentTime)
 				if (!((*e_Object_it).imageFrameX >= 5 && (*e_Object_it).imageFrameX <= 7))
 					(*e_Object_it).imageFrameX = 5;
 
-				if ((*e_Object_it).moveTimer == MOTION_DELAY)
+				if ((*e_Object_it).moveTimer == MOTION_DELAY * 2)
 				{
 					(*e_Object_it).moveTimer = 0;
 					(*e_Object_it).imageFrameX++;
@@ -328,7 +397,7 @@ void EnemyObject::moveEnemy(float ingameCurrentTime)
 				if (!((*e_Object_it).imageFrameX >= 0 && (*e_Object_it).imageFrameX <= 4))
 					(*e_Object_it).imageFrameX = 0;
 
-				if ((*e_Object_it).moveTimer == MOTION_DELAY)
+				if ((*e_Object_it).moveTimer == MOTION_DELAY * 2)
 				{
 					(*e_Object_it).moveTimer = 0;
 					(*e_Object_it).imageFrameX++;
@@ -419,42 +488,92 @@ void EnemyObject::loadEnemyBulletFile()
 void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 {
 	e_Object_it = e_Object.begin();
-	for (; e_Object_it != e_Object.end(); e_Object_it++)
+	if ((*e_Object_it).state == ALIVE)
 	{
-		if ((*e_Object_it).existingTime > FIRST_BULLET_TIME_AFTER_CREATE 
-			&& (*e_Object_it).isFire == FALSE)
+		for (; e_Object_it != e_Object.end(); e_Object_it++)
 		{
-			(*e_Object_it).isFire = TRUE;
+			if ((*e_Object_it).existingTime > FIRST_BULLET_TIME_AFTER_CREATE
+				&& (*e_Object_it).isFire == FALSE)
+			{
+				(*e_Object_it).isFire = TRUE;
+				
+				// 큰 요정일 때
+				if ((*e_Object_it).type == BIGFAIRY)
+				{	
+					if ((*e_Object_it).bulletCount == 0)
+					{
+						(*e_Object_it).firstAngle = UTIL::getAngle((*e_Object_it).x, (*e_Object_it).y,
+							PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
+						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + cosf((*e_Object_it).firstAngle) * CREATE_ENEMY_BULLET_DISTANCE;
+						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + (-sinf((*e_Object_it).firstAngle)) * CREATE_ENEMY_BULLET_DISTANCE;
 
-			enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x;
-			enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + CREATE_ENEMY_BULLET_DISTANCE;
-			enemyBullet[(*e_Object_it).bulletType].angle = UTIL::getAngle(enemyBullet[(*e_Object_it).bulletType].x, enemyBullet[(*e_Object_it).bulletType].y,
-				PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
+						enemyBullet[(*e_Object_it).bulletType].angle = UTIL::getAngle(enemyBullet[(*e_Object_it).bulletType].x, enemyBullet[(*e_Object_it).bulletType].y,
+							PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
+						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+					}
+					else if ((*e_Object_it).bulletCount == 1)
+					{
+						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle - PI / 40) * CREATE_ENEMY_BULLET_DISTANCE);
+						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle - PI / 40))  * CREATE_ENEMY_BULLET_DISTANCE);
+						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle - (PI / 40);
+						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
 
-			(*e_Object_it).lastBulletFireTime = ingameCurrentTime;
-			(*e_Object_it).bulletCount++;
-			e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
-		}
+						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle + PI / 40) * CREATE_ENEMY_BULLET_DISTANCE);
+						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle + PI / 40)) * CREATE_ENEMY_BULLET_DISTANCE);
+						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle + (PI / 40);
+						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+					}
+					else if ((*e_Object_it).bulletCount == 2)
+					{
+						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + cosf((*e_Object_it).firstAngle) * CREATE_ENEMY_BULLET_DISTANCE;
+						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + (-sinf((*e_Object_it).firstAngle)) * CREATE_ENEMY_BULLET_DISTANCE;
+						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle;
+						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+
+						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle - PI / 20) * CREATE_ENEMY_BULLET_DISTANCE);
+						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle - PI / 20))  * CREATE_ENEMY_BULLET_DISTANCE);
+						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle - (PI / 20);
+						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+
+						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle + PI / 20) * CREATE_ENEMY_BULLET_DISTANCE);
+						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle + PI / 20)) * CREATE_ENEMY_BULLET_DISTANCE);
+						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle + (PI / 20);
+						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+					}
+				}
+				else // 작은 요정일 때
+				{
+					enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x;
+					enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + CREATE_ENEMY_BULLET_DISTANCE;
+					enemyBullet[(*e_Object_it).bulletType].angle = UTIL::getAngle(enemyBullet[(*e_Object_it).bulletType].x, enemyBullet[(*e_Object_it).bulletType].y,
+						PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
+					e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+				}				
 		
-		if ((*e_Object_it).isFire == TRUE)
-		{
-			if ((*e_Object_it).bulletCount == (*e_Object_it).bulletCountLimit)
-			{
-				(*e_Object_it).bulletCount = 0;
+				(*e_Object_it).lastBulletFireTime = ingameCurrentTime;
+				(*e_Object_it).bulletCount++;
 			}
-			
-			if (!((*e_Object_it).nextBulletTermTime == 0) &&
-				((ingameCurrentTime - (*e_Object_it).lastBulletFireTime) > (*e_Object_it).nextBulletTermTime) &&
-				(*e_Object_it).bulletCount != 0)
+
+			if ((*e_Object_it).isFire == TRUE)
 			{
-				(*e_Object_it).isFire = FALSE;
+				if ((*e_Object_it).bulletCount == (*e_Object_it).bulletCountLimit)
+				{
+					(*e_Object_it).bulletCount = 0;
+				}
+
+				if (!((*e_Object_it).nextBulletTermTime == 0) &&
+					((ingameCurrentTime - (*e_Object_it).lastBulletFireTime) > (*e_Object_it).nextBulletTermTime) &&
+					(*e_Object_it).bulletCount != 0)
+				{
+					(*e_Object_it).isFire = FALSE;
+				}
+				
+				if ((*e_Object_it).reloadTime != 0 &&
+					((ingameCurrentTime - (*e_Object_it).lastBulletFireTime) > (*e_Object_it).reloadTime))
+					(*e_Object_it).isFire = FALSE;
 			}
-			
-			if ((*e_Object_it).reloadTime != 0 &&
-				(ingameCurrentTime - (*e_Object_it).lastBulletFireTime > (*e_Object_it).reloadTime))
-				(*e_Object_it).isFire = FALSE;
 		}
-	}
+	}	
 }
 
 void EnemyObject::moveEnemyBullet()
@@ -518,7 +637,7 @@ void EnemyObject::render(HDC hdc)
 
 			if ((*e_Object_it).type == BIGFAIRY)
 			{
-				bigFairy->frameRender(hdc, (*e_Object_it).x - 32, (*e_Object_it).y - 30, (*e_Object_it).imageFrameX, greenFairy->getFrameY());
+				bigFairy->frameRender(hdc, (*e_Object_it).x - 32, (*e_Object_it).y - 30, (*e_Object_it).imageFrameX, bigFairy->getFrameY());
 
 				// 디버그용
 				if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))

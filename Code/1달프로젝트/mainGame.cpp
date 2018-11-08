@@ -22,8 +22,8 @@ HRESULT mainGame::init()
 {
 	gameNode::init(true);
 
-	if (SOUNDMANAGER->Init() == false)
-		return S_FALSE;
+	//if (SOUNDMANAGER->Init() == false)
+		//return S_FALSE;
 
 	SOUNDMANAGER->AddSound(TEXT("Menu"), TEXT("Sound\\Menu.wav"), true, true);
 	SOUNDMANAGER->AddSound(TEXT("Select"), TEXT("Sound\\Select.wav"), false, false);
