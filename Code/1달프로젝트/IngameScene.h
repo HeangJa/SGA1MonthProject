@@ -6,6 +6,7 @@ class InGameScene : public gameNode
 private:
 	Image*  info;
 	Image*	battleField[2];
+	Image*	bossField;
 	Image*	lifeImage;
 	Image*	stage1Image;
 	Image*	pauseBackground;
@@ -22,6 +23,8 @@ private:
 
 	float	ingameStartTime;
 
+	int		battleFieldAlpha;
+	int		bossFieldAlpha;
 	int		stage1ImageAlpha;
 	int		changingAlphaValue;
 	int		stage1ImageTimer;

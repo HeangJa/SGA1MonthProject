@@ -29,6 +29,11 @@ HRESULT InGameScene::init()
 	battleField[1]->setX(40);
 	battleField[1]->setY(36 - 528);
 
+	bossField = IMAGEMANAGER->addImage(TEXT("BossField"), TEXT("Image\\bossfield2.bmp"),
+		480, 528, false, RGB(255, 255, 255));
+	bossField->setX(40);
+	bossField->setY(36);
+
 	lifeImage = IMAGEMANAGER->addImage(TEXT("Life"), TEXT("Image\\life.bmp"),
 		32, 32, true, RGB(255, 255, 255));
 	lifeImage->setX(660);
@@ -67,6 +72,8 @@ HRESULT InGameScene::init()
 
 	highScore = 0;
 
+	battleFieldAlpha = OPAQUE_;
+	bossFieldAlpha = TRANSPARENT_;
 	stage1ImageAlpha = 1;
 	changingAlphaValue = 3;
 	stage1ImageTimer = 0;
@@ -119,6 +126,21 @@ void InGameScene::update()
 			if (battleField[i]->getY() == (36 + 528))
 				battleField[i]->setY(36 - 528);
 		}
+		// 필드 알파값
+		if (TIMEMANAGER->setTime(ingameStartTime) > 80 - 80)
+		{
+			battleFieldAlpha -= 2;
+			if (battleFieldAlpha < TRANSPARENT_)
+				battleFieldAlpha = TRANSPARENT_;
+		}
+		if (battleFieldAlpha == TRANSPARENT_)
+		{
+			bossFieldAlpha += 2;
+			if (bossFieldAlpha > OPAQUE_)
+				bossFieldAlpha = OPAQUE_;
+		}
+			
+			
 
 		// 스테이지
 		stageAlphaControl();
@@ -196,8 +218,9 @@ void InGameScene::render()
 	// 필드 이미지
 	for (int i = 0; i < 2; i++)
 	{
-		battleField[i]->render(getMemDC());
+		battleField[i]->alphaRender(getMemDC(), battleFieldAlpha);
 	}
+	bossField->alphaRender(getMemDC(), bossFieldAlpha);
 
 	// 배경
 	IMAGEMANAGER->render(TEXT("BattleScene"), getMemDC(), 0, 0);

@@ -88,8 +88,24 @@ void Collision::collisionCheck()
 				}
 			}
 		}
-		
+	}
 
+	// 플레이어 탄과 보스
+	if (PLAYER->getP_BulletSize() > 0 && BOSS->getBossState() == ALIVE && BOSS->getBossPattern() != APPEAR)
+	{
+		p_Bullet_it = PLAYER->getP_Bullet_Begin();
+		for (; p_Bullet_it != PLAYER->getP_Bullet_End(); p_Bullet_it++)
+		{
+			if ((UTIL::getDistance((*p_Bullet_it).x, (*p_Bullet_it).y,
+				BOSS->getBossPosX(), BOSS->getBossPosY()) < (((*p_Bullet_it).diameter / 2) + (BOSS->getBossDiameter() / 2))))
+			{
+				SOUNDMANAGER->Stop(TEXT("EnemyDamage"));
+				SOUNDMANAGER->Play(TEXT("EnemyDamage"), 0.05f);
+				PLAYER->setPlayerScore(PLAYER->getPlayerScore() + 10);
+				(*p_Bullet_it).state = DEAD;
+				BOSS->setBossHp(BOSS->getBossHp() - (*p_Bullet_it).damage);
+			}
+		}
 	}
 }
 

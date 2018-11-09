@@ -510,6 +510,8 @@ void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 						enemyBullet[(*e_Object_it).bulletType].angle = UTIL::getAngle(enemyBullet[(*e_Object_it).bulletType].x, enemyBullet[(*e_Object_it).bulletType].y,
 							PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
 					}
 					else if ((*e_Object_it).bulletCount == 1)
 					{
@@ -517,11 +519,15 @@ void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle - PI / 40))  * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle - (PI / 40);
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
 
 						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle + PI / 40) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle + PI / 40)) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle + (PI / 40);
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
 					}
 					else if ((*e_Object_it).bulletCount == 2)
 					{
@@ -529,16 +535,22 @@ void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + (-sinf((*e_Object_it).firstAngle)) * CREATE_ENEMY_BULLET_DISTANCE;
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle;
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
 
 						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle - PI / 20) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle - PI / 20))  * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle - (PI / 20);
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
 
 						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle + PI / 20) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle + PI / 20)) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle + (PI / 20);
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
 					}
 				}
 				else // 작은 요정일 때
@@ -548,6 +560,8 @@ void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 					enemyBullet[(*e_Object_it).bulletType].angle = UTIL::getAngle(enemyBullet[(*e_Object_it).bulletType].x, enemyBullet[(*e_Object_it).bulletType].y,
 						PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
 					e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
+					SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
+					SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
 				}				
 		
 				(*e_Object_it).lastBulletFireTime = ingameCurrentTime;

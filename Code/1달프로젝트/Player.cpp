@@ -373,10 +373,16 @@ void Player::createBullet()
 			bullet.x = supporterPos[i].x + 8;
 			bullet.y = supporterPos[i].y + 8;
 			bullet.diameter = load_bullet[SUPPORT].diameter;
-			if (i % 2 == 0)
-				bullet.angle = PI * 3 / 4;
+
+			if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
+				bullet.angle = PI / 2;
 			else
-				bullet.angle = PI / 4;
+			{
+				if (i % 2 == 0)
+					bullet.angle = PI * 3 / 4;
+				else
+					bullet.angle = PI / 4;
+			}
 			bullet.speed = load_bullet[SUPPORT].speed;
 			bullet.damage = load_bullet[SUPPORT].damage;
 			bullet.type = SUPPORT;
@@ -394,9 +400,6 @@ void Player::moveBullet()
 	p_Bullet_it = p_Bullet.begin();
 	for (; p_Bullet_it != p_Bullet.end();)
 	{
-		if ((*p_Bullet_it).type == SUPPORT && KEYMANAGER->isStayKeyDown(VK_LSHIFT))
-			(*p_Bullet_it).angle = PI / 2;
-
 		(*p_Bullet_it).x += cosf((*p_Bullet_it).angle) * (*p_Bullet_it).speed;
 		(*p_Bullet_it).y -= sinf((*p_Bullet_it).angle) * (*p_Bullet_it).speed;
 

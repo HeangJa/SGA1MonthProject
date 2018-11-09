@@ -47,6 +47,8 @@ HRESULT GameClearScene::init()
 	ZeroMemory(showHighScoreName, SAVENAMELENGTH * SHOWHIGHSCORELIMIT);
 	showHighScoreLength = 0;
 
+	SOUNDMANAGER->Play(TEXT("GameClear"), 0.2f);
+
 	return S_OK;
 }
 
@@ -97,7 +99,7 @@ void GameClearScene::update()
 				if (writeFile.is_open())
 				{
 					writeFile << saveName[0] << saveName[1] << saveName[2] << endl;
-					writeFile << "123456\n";
+					writeFile << PLAYER->getPlayerScore() << endl;
 					writeFile.close();
 				}
 
@@ -111,6 +113,7 @@ void GameClearScene::update()
 	{
 		if (KEYMANAGER->isOnceKeyDown('Z'))
 		{
+			SOUNDMANAGER->Stop(TEXT("GameClear"));
 			SCENEMANAGER->ChangeScene(TEXT("MenuScene"));
 		}
 	}
@@ -146,7 +149,7 @@ void GameClearScene::render()
 		_stprintf_s(szTemp, sizeof(szTemp), TEXT("%c%c%c"), saveName[0], saveName[1], saveName[2]);
 		TextOut(getMemDC(), 200, 180, szTemp, _tcslen(szTemp));
 
-		NUMBERMANAGER->DrawNumber(getMemDC(), 18543, 400, 175, 2, 6);
+		NUMBERMANAGER->DrawNumber(getMemDC(), PLAYER->getPlayerScore(), 400, 175, 2, 6);
 	}
 
 	else if(state == SHOWHIGHSCORE)
