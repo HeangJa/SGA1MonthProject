@@ -76,7 +76,7 @@ void Collision::collisionCheck()
 					(*e_Object_it).x, (*e_Object_it).y)) < (((*p_Bullet_it).diameter / 2) + ((*e_Object_it).diameter / 2)))
 				{
 					SOUNDMANAGER->Stop(TEXT("EnemyDamage"));
-					SOUNDMANAGER->Play(TEXT("EnemyDamage"), 0.05f);
+					SOUNDMANAGER->Play(TEXT("EnemyDamage"), 0.08f);
 					PLAYER->setPlayerScore(PLAYER->getPlayerScore() + 10);
 					(*p_Bullet_it).state = DEAD;
 					(*e_Object_it).hp -= (*p_Bullet_it).damage;
@@ -114,7 +114,7 @@ void Collision::collisionCheck()
 				BOSS->getBossPosX(), BOSS->getBossPosY()) < (((*p_Bullet_it).diameter / 2) + (BOSS->getBossDiameter() / 2))))
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyDamage"));
-				SOUNDMANAGER->Play(TEXT("EnemyDamage"), 0.05f);
+				SOUNDMANAGER->Play(TEXT("EnemyDamage"), 0.08f);
 				PLAYER->setPlayerScore(PLAYER->getPlayerScore() + 10);
 				(*p_Bullet_it).state = DEAD;
 				BOSS->setBossHp(BOSS->getBossHp() - (*p_Bullet_it).damage);

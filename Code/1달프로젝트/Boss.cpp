@@ -525,7 +525,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 		if (bulletTermTimer == 20)
 		{
 			SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-			SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+			SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 			createNWayBullet(3, 0, PI* 2, 20, bossPosX, bossPosY);
 			bulletTermTimer = 0;
 		}
@@ -550,7 +550,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 			if (bulletTermTimer % 5 == 0 && isCreateBossBullet == true)
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(2, PI * 1 / 8, PI * 3 / 8, 8, bossPosX, bossPosY);
 				createNWayBullet(2, PI * 5 / 8, PI * 7 / 8, 8, bossPosX, bossPosY);
 				bulletCountNum++;
@@ -559,7 +559,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 			if (bulletTermTimer == 10)
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(0, PI * 9 / 8, PI * 11 / 8, 3, bossPosX, bossPosY);
 				createNWayBullet(0, PI * 13 / 8, PI * 15 / 8, 3, bossPosX, bossPosY);
 				bulletTermTimer = 0;
@@ -603,14 +603,14 @@ void Boss::createBossBullet(float ingameCurrentTime)
 			if (bulletTermTimer == 20)
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(3, 0, PI * 2, RND->getFromIntTo(30, 40), bossPosX - 50, bossPosY - 50, 10);
 			}
 
 			if (bulletTermTimer == 40)
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(4, 0, PI * 2, RND->getFromIntTo(30, 40), bossPosX + 50, bossPosY - 50, 10);
 				bulletTermTimer = 0;
 			}
@@ -645,7 +645,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 				}
 
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(0, 0 + change, PI * 2 + change, 8, bossPosX, bossPosY);
 				createNWayBullet(1, PI / 4 + change, PI * 9 / 4 + change, 8, bossPosX, bossPosY);
 			}
@@ -653,7 +653,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 			if (bulletTermTimer % 20 == 0)
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(2, 0 + changingBulletAngle, (PI * 2) + changingBulletAngle, 20, bossPosX, bossPosY);
 
 				changingBulletAngle += PI / 100;
@@ -683,7 +683,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 			if (bulletTermTimer % 2 == 0 && isCreateBossBullet == true)
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(0, 0 + changingBulletAngle, (PI * 2) + changingBulletAngle, 20, bossPosX, bossPosY);
 
 				bulletCountNum++;
@@ -730,7 +730,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 			if (bulletTermTimer % 2 == 0 && isCreateBossBullet == true)
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(0, 0, (PI * 2), 20, 
 					RND->getFromFloatTo(bossPosX - 200, bossPosX + 200), 
 					RND->getFromFloatTo(bossPosY - 50, bossPosY), 1);
@@ -786,7 +786,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 			if (bulletTermTimer % 30 == 0)
 			{
 				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
-				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
 				createNWayBullet(3, PI / 2 + changingBulletAngle, 
 					PI * 3 / 2 + changingBulletAngle, 2, bossPosX, bossPosY);
 				createNWayBullet(4, 0 + changingBulletAngle * 2,
@@ -800,6 +800,9 @@ void Boss::createBossBullet(float ingameCurrentTime)
 
 			if (bulletTermTimer % 10 == 0)
 			{
+				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
+
 				if (bulletCountNum == 0)
 					firstBulletAngle = UTIL::getAngle(bossPosX, bossPosY, PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
 
@@ -812,6 +815,9 @@ void Boss::createBossBullet(float ingameCurrentTime)
 
 			if (bulletTermTimer % 2 == 0 && isCreateBossBullet == true)
 			{
+				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.1f);
+
 				if (bulletCountNum == 0)
 					firstBulletAngle = UTIL::getAngle(bossPosX, bossPosY, PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
 				
