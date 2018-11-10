@@ -47,6 +47,20 @@ void Collision::collisionCheck()
 				}
 			}
 		}
+
+		// 플레이어와 보스 탄
+		if (BOSS->getB_BulletSize() > 0)
+		{
+			b_Bullet_it = BOSS->getB_Bullet_Begin();
+			for (; b_Bullet_it != BOSS->getB_Bullet_End(); b_Bullet_it++)
+			{
+				if ((UTIL::getDistance(PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY(),
+					(*b_Bullet_it).x, (*b_Bullet_it).y)) < ((PLAYER->getPlayerDiameter() / 2 + (*b_Bullet_it).diameter / 2) - 2))
+				{
+					PLAYER->setIsPlayerDead(true);
+				}
+			}
+		}
 	}
 
 	// 플레이어 탄과 적 오브젝트
@@ -62,7 +76,7 @@ void Collision::collisionCheck()
 					(*e_Object_it).x, (*e_Object_it).y)) < (((*p_Bullet_it).diameter / 2) + ((*e_Object_it).diameter / 2)))
 				{
 					SOUNDMANAGER->Stop(TEXT("EnemyDamage"));
-					SOUNDMANAGER->Play(TEXT("EnemyDamage"), 0.2f);
+					SOUNDMANAGER->Play(TEXT("EnemyDamage"), 0.05f);
 					PLAYER->setPlayerScore(PLAYER->getPlayerScore() + 10);
 					(*p_Bullet_it).state = DEAD;
 					(*e_Object_it).hp -= (*p_Bullet_it).damage;
@@ -107,6 +121,7 @@ void Collision::collisionCheck()
 			}
 		}
 	}
+
 }
 
 void Collision::effectRender(HDC hdc)

@@ -22,20 +22,20 @@ HRESULT mainGame::init()
 {
 	gameNode::init(true);
 
-	//if (SOUNDMANAGER->Init() == false)
-		//return S_FALSE;
+	if (SOUNDMANAGER->Init() == false)
+		return S_FALSE;
 
 	SOUNDMANAGER->AddSound(TEXT("Menu"), TEXT("Sound\\Menu.wav"), true, true);
 	SOUNDMANAGER->AddSound(TEXT("Select"), TEXT("Sound\\Select.wav"), false, false);
 	SOUNDMANAGER->AddSound(TEXT("Ok"), TEXT("Sound\\Ok.wav"), false, false);
 	SOUNDMANAGER->AddSound(TEXT("Field"), TEXT("Sound\\Field.wav"), true, true);
 	SOUNDMANAGER->AddSound(TEXT("Pause"), TEXT("Sound\\Pause.wav"), false, false);
-	SOUNDMANAGER->AddSound(TEXT("PlayerAttack"), TEXT("Sound\\PlayerAttack.wav"), false, false);
-	SOUNDMANAGER->AddSound(TEXT("PlayerDead"), TEXT("Sound\\PlayerDead.wav"), false, false);
-	SOUNDMANAGER->AddSound(TEXT("EnemyAttack"), TEXT("Sound\\EnemyAttack.wav"), false, false);
-	SOUNDMANAGER->AddSound(TEXT("EnemyAttack2"), TEXT("Sound\\EnemyAttack2.wav"), false, false);
-	SOUNDMANAGER->AddSound(TEXT("EnemyDead"), TEXT("Sound\\EnemyDead.wav"), false, false);
-	SOUNDMANAGER->AddSound(TEXT("EnemyDamage"), TEXT("Sound\\EnemyDamage.wav"), false, false);
+	SOUNDMANAGER->AddSound(TEXT("PlayerAttack"), TEXT("Sound\\PlayerAttack.wav"), true, false);
+	SOUNDMANAGER->AddSound(TEXT("PlayerDead"), TEXT("Sound\\PlayerDead.wav"), true, false);
+	SOUNDMANAGER->AddSound(TEXT("EnemyAttack"), TEXT("Sound\\EnemyAttack.wav"), true, false);
+	SOUNDMANAGER->AddSound(TEXT("EnemyAttack2"), TEXT("Sound\\EnemyAttack2.wav"), true, false);
+	SOUNDMANAGER->AddSound(TEXT("EnemyDead"), TEXT("Sound\\EnemyDead.wav"), true, false);
+	SOUNDMANAGER->AddSound(TEXT("EnemyDamage"), TEXT("Sound\\EnemyDamage.wav"), true, false);
 	SOUNDMANAGER->AddSound(TEXT("Boss"), TEXT("Sound\\Boss.wav"), false, false);
 	SOUNDMANAGER->AddSound(TEXT("BossDead"), TEXT("Sound\\BossDead.wav"), false, false);
 	SOUNDMANAGER->AddSound(TEXT("GameClear"), TEXT("Sound\\GameClear.wav"), false, false);

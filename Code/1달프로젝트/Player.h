@@ -1,5 +1,6 @@
 #pragma once
 #include "singletonBase.h"
+#include "EnemyObject.h"
 
 class Player : public singletonBase<Player>
 {
@@ -60,6 +61,10 @@ private:
 
 	typedef list<P_BULLET>				bulletInfo;
 	typedef list<P_BULLET>::iterator	bulletInfo_it;
+
+	list<EnemyObject::tagenemyinfo>::iterator	e_Object_it;
+	map<float, POINT>			e_Object_distance;
+	map<float, POINT>::iterator	e_Object_distance_it;
 
 	bulletInfo		p_Bullet;
 	bulletInfo_it	p_Bullet_it;

@@ -98,5 +98,7 @@ public:
 	int	 getE_BulletSize() { return e_Bullet.size(); }
 	enemyBulletInfo_it getE_Bullet_Begin() { return e_Bullet.begin(); }
 	enemyBulletInfo_it getE_Bullet_End() { return e_Bullet.end(); }
+
+	void e_BulletClear() { e_Bullet.clear(); }
 };
 

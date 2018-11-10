@@ -4,7 +4,7 @@
     <angle1 value = "3.141592654 / 2"/>
     <angle2 value = "3.141592654 / 2"/>
     <speed value = "10"/>
-    <damage value = "10"/>
+    <damage value = "1"/>
   </Type1>
   <Type2 type = "SUPPORT">
     <diameter value = "16"/>

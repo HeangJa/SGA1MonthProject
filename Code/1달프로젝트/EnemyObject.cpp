@@ -55,7 +55,7 @@ void EnemyObject::release()
 
 void EnemyObject::update(float ingameCurrentTime)
 {
-	//createEnemy(ingameCurrentTime);
+	createEnemy(ingameCurrentTime);
 	moveEnemy(ingameCurrentTime);
 
 	if (e_Object.size() > 0)
@@ -177,7 +177,7 @@ void EnemyObject::createEnemy(float ingameCurrentTime)
 {
 	for (int i = 0; i < 100; i++)
 	{
-		if (enemyObject[i].createTime < ingameCurrentTime + 10 && enemyObject[i].state == NOTCREATE)
+		if (enemyObject[i].createTime < ingameCurrentTime && enemyObject[i].state == NOTCREATE)
 		{
 			enemyObject[i].createTime = ingameCurrentTime;
 			enemyObject[i].state = CREATE;
@@ -511,7 +511,7 @@ void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 							PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
 						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
-						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.1f);
 					}
 					else if ((*e_Object_it).bulletCount == 1)
 					{
@@ -520,14 +520,14 @@ void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle - (PI / 40);
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
 						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
-						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.1f);
 
 						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle + PI / 40) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle + PI / 40)) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle + (PI / 40);
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
 						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
-						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.1f);
 					}
 					else if ((*e_Object_it).bulletCount == 2)
 					{
@@ -536,21 +536,21 @@ void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle;
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
 						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
-						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.1f);
 
 						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle - PI / 20) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle - PI / 20))  * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle - (PI / 20);
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
 						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
-						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.1f);
 
 						enemyBullet[(*e_Object_it).bulletType].x = (*e_Object_it).x + (cosf((*e_Object_it).firstAngle + PI / 20) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].y = (*e_Object_it).y + ((-sinf((*e_Object_it).firstAngle + PI / 20)) * CREATE_ENEMY_BULLET_DISTANCE);
 						enemyBullet[(*e_Object_it).bulletType].angle = (*e_Object_it).firstAngle + (PI / 20);
 						e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
 						SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
-						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
+						SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.1f);
 					}
 				}
 				else // 작은 요정일 때
@@ -561,7 +561,7 @@ void EnemyObject::createEnemyBullet(float ingameCurrentTime)
 						PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
 					e_Bullet.push_back(enemyBullet[(*e_Object_it).bulletType]);
 					SOUNDMANAGER->Stop(TEXT("EnemyAttack"));
-					SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.2f);
+					SOUNDMANAGER->Play(TEXT("EnemyAttack"), 0.1f);
 				}				
 		
 				(*e_Object_it).lastBulletFireTime = ingameCurrentTime;
@@ -625,38 +625,27 @@ void EnemyObject::render(HDC hdc)
 			if ((*e_Object_it).type == BLUEFAIRY)
 			{
 				blueFairy->frameRender(hdc, (*e_Object_it).x - 16, (*e_Object_it).y - 16, (*e_Object_it).imageFrameX, blueFairy->getFrameY());
-
-				// 디버그용
-				if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
-					EllipseMakeCenter(hdc, (*e_Object_it).x, (*e_Object_it).y, (*e_Object_it).diameter, (*e_Object_it).diameter);
 			}
 
 			if ((*e_Object_it).type == REDFAIRY)
 			{
 				redFairy->frameRender(hdc, (*e_Object_it).x - 16, (*e_Object_it).y - 16, (*e_Object_it).imageFrameX, redFairy->getFrameY());
-
-				// 디버그용
-				if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
-					EllipseMakeCenter(hdc, (*e_Object_it).x, (*e_Object_it).y, (*e_Object_it).diameter, (*e_Object_it).diameter);
 			}
 
 			if ((*e_Object_it).type == GREENFAIRY)
 			{
 				greenFairy->frameRender(hdc, (*e_Object_it).x - 16, (*e_Object_it).y - 16, (*e_Object_it).imageFrameX, greenFairy->getFrameY());
-
-				// 디버그용
-				if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
-					EllipseMakeCenter(hdc, (*e_Object_it).x, (*e_Object_it).y, (*e_Object_it).diameter, (*e_Object_it).diameter);
 			}
 
 			if ((*e_Object_it).type == BIGFAIRY)
 			{
-				bigFairy->frameRender(hdc, (*e_Object_it).x - 32, (*e_Object_it).y - 30, (*e_Object_it).imageFrameX, bigFairy->getFrameY());
-
-				// 디버그용
-				if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
-					EllipseMakeCenter(hdc, (*e_Object_it).x, (*e_Object_it).y, (*e_Object_it).diameter, (*e_Object_it).diameter);
+				bigFairy->frameRender(hdc, (*e_Object_it).x - 32, (*e_Object_it).y - 30, (*e_Object_it).imageFrameX, bigFairy->getFrameY());				
 			}
+
+#if defined(DEBUG_MODE)
+			if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
+				EllipseMakeCenter(hdc, (*e_Object_it).x, (*e_Object_it).y, (*e_Object_it).diameter, (*e_Object_it).diameter);
+#endif	// DEBUG_MODE
 		}
 	}
 
@@ -669,16 +658,17 @@ void EnemyObject::render(HDC hdc)
 		{
 			e_BulletImage2->frameRender(hdc, (*e_Bullet_it).x - 8, (*e_Bullet_it).y - 8, (*e_Bullet_it).imageFrameX, (*e_Bullet_it).imageFrameY);
 
-			// 디버그용
+#if defined(DEBUG_MODE)
 			if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
 				EllipseMakeCenter(hdc, (*e_Bullet_it).x, (*e_Bullet_it).y, (*e_Bullet_it).diameter, (*e_Bullet_it).diameter);
+#endif	// DEBUG_MODE
 		}
 	}
 
-	// 디버그용
-	
+#if defined(DEBUG_MODE)
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("적 오브젝트 개수 : %d"), e_Object.size());
 	TextOut(hdc, 540, 360, szTemp, _tcslen(szTemp));
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("적 불릿 개수: %d"), e_Bullet.size());
 	TextOut(hdc, 540, 420, szTemp, _tcslen(szTemp));
+#endif	// DEBUG_MODE
 }

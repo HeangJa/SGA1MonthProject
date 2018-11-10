@@ -68,7 +68,7 @@ void Player::init()
 	isPlayerInvincible = false;
 	playerInvincibleTimer = 0;
 	playerScore = 0;
-	playerLife = 3;
+	playerLife = 10;
 	playerPower = 39;
 
 	// 플레이어 탄 정보
@@ -215,8 +215,8 @@ void Player::update()
 void Player::render(HDC hdc)
 {
 	// 회전변환
-	PlgBlt(hdc, vertices, playerShiftImage->getMemDC(), 0, 0, 		
-		playerShiftImage->getWidth(), playerShiftImage->getHeight(), NULL, vertices[0].x, vertices[0].y);
+	//PlgBlt(hdc, vertices, playerShiftImage->getMemDC(), 0, 0, 		
+	//	playerShiftImage->getWidth(), playerShiftImage->getHeight(), NULL, vertices[0].x, vertices[0].y);
 	
 	// 플레이어
 	playerImage->alphaRender(hdc, playerImage->getX(), playerImage->getY(),
@@ -232,8 +232,6 @@ void Player::render(HDC hdc)
 
 	// 탄
 	renderBullet(hdc);
-
-	//playerShiftImage->alphaRender(hdc, 120);
 }
 
 void Player::ifPlayerDead()
@@ -241,11 +239,16 @@ void Player::ifPlayerDead()
 	// 죽었을 때 init같은
 	if (isPlayerDead == true)
 	{
+		SOUNDMANAGER->Stop(TEXT("PlayerDead"));
 		SOUNDMANAGER->Play(TEXT("PlayerDead"), 0.2f);
 		playerLife -= 1;
 		isPlayerDead = false;
 		isPlayerInvincible = true;
 		playerAlpha = TRANSLUCENT_;
+
+		// 탄 전부 제거
+		ENEMYOBJECT->e_BulletClear();
+		BOSS->b_BulletClear();
 
 		for (int i = 0; i < playerPower / 4; i++)
 		{
@@ -271,7 +274,7 @@ void Player::ifPlayerDead()
 			playerImage->setY(520);
 		}
 		
-		if(playerInvincibleTimer > 60)
+		if(playerInvincibleTimer < 120 && playerImage->getY() > 460)
 			playerImage->setY(playerImage->getY() - 1);
 
 		if (playerInvincibleTimer == PLAYER_INVINCIBLE_DELAY)
@@ -348,7 +351,7 @@ void Player::loadBulletFile()
 void Player::createBullet()
 {
 	SOUNDMANAGER->Stop(TEXT("PlayerAttack"));
-	SOUNDMANAGER->Play(TEXT("PlayerAttack"), 0.2f);
+	SOUNDMANAGER->Play(TEXT("PlayerAttack"), 0.1f);
 
 	// 기본 탄1(중심점)
 	bullet.state = ALIVE;
@@ -385,6 +388,8 @@ void Player::createBullet()
 			}
 			bullet.speed = load_bullet[SUPPORT].speed;
 			bullet.damage = load_bullet[SUPPORT].damage;
+			if(playerType == MARISA)
+				bullet.damage = load_bullet[SUPPORT].damage * 2;
 			bullet.type = SUPPORT;
 			p_Bullet.push_back(bullet);
 		}
@@ -400,6 +405,32 @@ void Player::moveBullet()
 	p_Bullet_it = p_Bullet.begin();
 	for (; p_Bullet_it != p_Bullet.end();)
 	{
+		// 서포트 탄일 때
+		
+		// 호밍기능
+		if (playerType == REIMU && (*p_Bullet_it).type == SUPPORT && BOSS->getBossState() == ALIVE)
+		{
+			(*p_Bullet_it).angle = UTIL::getAngle((*p_Bullet_it).x, (*p_Bullet_it).y,
+				BOSS->getBossPosX(), BOSS->getBossPosY());
+		}
+
+		else if ((*p_Bullet_it).type == SUPPORT && ENEMYOBJECT->getE_ObjectSize() > 0)
+		{
+			e_Object_distance.clear();
+			// 적 오브젝트 정보 수집
+			e_Object_it = ENEMYOBJECT->getE_Object_Begin();
+			for (; e_Object_it != ENEMYOBJECT->getE_Object_End(); e_Object_it++)
+			{
+				e_Object_distance.insert(pair<float, POINT>(
+					UTIL::getDistance((*p_Bullet_it).x, (*p_Bullet_it).y, (*e_Object_it).x, (*e_Object_it).y),
+					{ (LONG)(*e_Object_it).x, (LONG)(*e_Object_it).y }
+				));
+			}
+
+			(*p_Bullet_it).angle = UTIL::getAngle((*p_Bullet_it).x, (*p_Bullet_it).y,
+				(*e_Object_distance.begin()).second.x, (*e_Object_distance.begin()).second.y);
+		}
+
 		(*p_Bullet_it).x += cosf((*p_Bullet_it).angle) * (*p_Bullet_it).speed;
 		(*p_Bullet_it).y -= sinf((*p_Bullet_it).angle) * (*p_Bullet_it).speed;
 
@@ -421,23 +452,21 @@ void Player::renderBullet(HDC hdc)
 		if ((*p_Bullet_it).type == NORMAL)
 			bulletImage->frameRender(hdc, (*p_Bullet_it).x -7, (*p_Bullet_it).y - 7);
 
-		// 디버그용
-		if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
-			EllipseMakeCenter(hdc, (*p_Bullet_it).x, (*p_Bullet_it).y, (*p_Bullet_it).diameter, (*p_Bullet_it).diameter);
-
 		if ((*p_Bullet_it).type == SUPPORT)
 		{
 			supportBulletImage->frameRender(hdc, (*p_Bullet_it).x - 8, (*p_Bullet_it).y - 8);
-
-			// 디버그용
-			if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
-				EllipseMakeCenter(hdc, (*p_Bullet_it).x, (*p_Bullet_it).y, (*p_Bullet_it).diameter, (*p_Bullet_it).diameter);
 		}
+
+#if defined(DEBUG_MODE)
+		if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
+			EllipseMakeCenter(hdc, (*p_Bullet_it).x, (*p_Bullet_it).y, (*p_Bullet_it).diameter, (*p_Bullet_it).diameter);
+#endif	// DEBUG_MODE
 	}
 
-	// 디버그용
+#if defined(DEBUG_MODE)
 	TCHAR szTemp[100] = { 0, };
 	Rectangle(hdc, 530, 280, 750, 580);
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("플레이어 총알 개수 : %d"), p_Bullet.size());
 	TextOut(hdc, 540, 330, szTemp, _tcslen(szTemp));
+#endif	// DEBUG_MODE
 }

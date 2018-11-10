@@ -36,7 +36,7 @@ HRESULT InGameScene::init()
 
 	lifeImage = IMAGEMANAGER->addImage(TEXT("Life"), TEXT("Image\\life.bmp"),
 		32, 32, true, RGB(255, 255, 255));
-	lifeImage->setX(660);
+	lifeImage->setX(650);
 	lifeImage->setY(123);
 
 	stage1Image = IMAGEMANAGER->addImage(TEXT("Stage1Image"), TEXT("Image\\stage1.bmp"),
@@ -69,6 +69,7 @@ HRESULT InGameScene::init()
 	currentSelected = RETURNTOGAME;
 
 	ingameStartTime = TIMEMANAGER->getWorldTime();
+	stopTime = 0;
 
 	highScore = 0;
 
@@ -100,18 +101,30 @@ void InGameScene::update()
 {
 	if (state == PLAYING)
 	{
-		// ESC를 누르면 일시정지
+		// P를 누르면 일시정지
 		if (KEYMANAGER->isOnceKeyDown('P'))
 		{
 			SOUNDMANAGER->Pause(TEXT("Field"));
+			SOUNDMANAGER->Pause(TEXT("Boss"));
 			SOUNDMANAGER->Play(TEXT("Pause"), 0.2f);
+			stopTime = TIMEMANAGER->setTime(ingameStartTime);
 			state = PAUSE;
-		}			
+		}
+
+		// S를 누르면 정지(디버그용)
+		if (KEYMANAGER->isOnceKeyDown('S'))
+		{
+			SOUNDMANAGER->Pause(TEXT("Field"));
+			SOUNDMANAGER->Pause(TEXT("Boss"));
+			stopTime = TIMEMANAGER->setTime(ingameStartTime);
+			state = STOP;
+		}
 
 		// 플레이어가 죽으면 게임오버씬으로 이동
 		if (PLAYER->getPlayerLife() == 0)
 		{
 			SOUNDMANAGER->Stop(TEXT("Field"));
+			SOUNDMANAGER->Stop(TEXT("Boss"));
 			PLAYER->release();
 			ENEMYOBJECT->release();
 			ITEMS->release();
@@ -121,13 +134,16 @@ void InGameScene::update()
 		// 필드 이동
 		for (int i = 0; i < 2; i++)
 		{
-			battleField[i]->setY(battleField[i]->getY() + 1);
+			int groundSpeed = 1;
+			if (TIMEMANAGER->setTime(ingameStartTime) > 80)
+				groundSpeed = 0.5;
+			battleField[i]->setY(battleField[i]->getY() + groundSpeed);
 
 			if (battleField[i]->getY() == (36 + 528))
 				battleField[i]->setY(36 - 528);
 		}
 		// 필드 알파값
-		if (TIMEMANAGER->setTime(ingameStartTime) > 80 - 80)
+		if (TIMEMANAGER->setTime(ingameStartTime) > 85)
 		{
 			battleFieldAlpha -= 2;
 			if (battleFieldAlpha < TRANSPARENT_)
@@ -139,8 +155,6 @@ void InGameScene::update()
 			if (bossFieldAlpha > OPAQUE_)
 				bossFieldAlpha = OPAQUE_;
 		}
-			
-			
 
 		// 스테이지
 		stageAlphaControl();
@@ -193,7 +207,9 @@ void InGameScene::update()
 			{
 			case RETURNTOGAME:
 				SOUNDMANAGER->Resume(TEXT("Field"));
+				SOUNDMANAGER->Resume(TEXT("Boss"));
 				state = PLAYING;
+				ingameStartTime += TIMEMANAGER->setTime(ingameStartTime) - stopTime;
 				break;
 
 			case RETRY:
@@ -209,6 +225,17 @@ void InGameScene::update()
 				SCENEMANAGER->ChangeScene(TEXT("MenuScene"));
 				break;
 			}
+		}
+	}
+
+	else if (state == STOP)
+	{
+		if (KEYMANAGER->isOnceKeyDown('S'))
+		{
+			ingameStartTime += TIMEMANAGER->setTime(ingameStartTime) - stopTime;
+			SOUNDMANAGER->Resume(TEXT("Field"));
+			SOUNDMANAGER->Resume(TEXT("Boss"));
+			state = PLAYING;
 		}
 	}
 }
@@ -233,7 +260,7 @@ void InGameScene::render()
 
 	for (int i = 0; i < PLAYER->getPlayerLife(); i++)
 	{
-		lifeImage->render(getMemDC(), lifeImage->getX() + 40*i, lifeImage->getY());
+		lifeImage->render(getMemDC(), lifeImage->getX() + 30*i, lifeImage->getY());
 	}
 
 	NUMBERMANAGER->DrawNumber(getMemDC(), PLAYER->getPlayerPower(), 690, 163, 1.5f, 2);
@@ -266,10 +293,14 @@ void InGameScene::render()
 		ig_returntomenu->alphaRender(getMemDC(), pauseImageAlpha[RETURNTOMENU]);
 	}
 
-	// 경과시간
+#if defined(DEBUG_MODE)
 	TCHAR szTemp[100] = { 0, };
-	_stprintf(szTemp, TEXT("경과시간 : %f, %f"), TIMEMANAGER->setTime(ingameStartTime), ingameStartTime);
+	if(state == PAUSE || state == STOP)
+		_stprintf(szTemp, TEXT("경과시간 : %f, %f"), stopTime, ingameStartTime);
+	else
+		_stprintf(szTemp, TEXT("경과시간 : %f, %f"), TIMEMANAGER->setTime(ingameStartTime), ingameStartTime);
 	TextOut(getMemDC(), 540, 300, szTemp, _tcslen(szTemp));
+#endif	// DEBUG_MODE
 }
 
 void InGameScene::setHighScore()

@@ -119,9 +119,4 @@ void Items::render(HDC hdc)
 			}
 		}		
 	}
-
-	// 디버그용
-	TCHAR szTemp[100] = { 0, };
-	_stprintf_s(szTemp, sizeof(szTemp), TEXT("아이템 개수 : %d"), itemList.size());
-	TextOut(hdc, 540, 390, szTemp, _tcslen(szTemp));
 }

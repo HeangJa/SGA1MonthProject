@@ -30,10 +30,10 @@ void Boss::init()
 		258, 192, 8, 6, true, RGB(255, 255, 255));
 
 	bossState = NOTCREATE;
-	bossPattern = APPEAR;
+	bossPattern = -1;
 	bossDiameter = 64;
-	bossSpeed = 1.f;
-	bossAngle = PI * 3 / 4;
+	bossSpeed = 0.f;
+	bossAngle = PI * 3 / 2;
 	bossHp = BOSS_MAXHP;
 
 	bossPosX = 280;
@@ -54,7 +54,10 @@ void Boss::init()
 
 	bulletTermTimer = 0;
 	bulletCountNum = 0;
-	changingBulletAngle = 0;
+	changingBulletAngle = 0.f;
+	firstBulletAngle = 0.f;
+
+	b_Bullet.clear();
 
 	setBullet();
 }
@@ -75,7 +78,6 @@ void Boss::update(float ingameCurrentTime)
 
 void Boss::render(HDC hdc)
 {
-	TCHAR szTemp[100] = { 0, };
 	if (bossState == ALIVE)
 	{
 		if (!(bossPattern == APPEAR))
@@ -87,9 +89,10 @@ void Boss::render(HDC hdc)
 		bossImage->frameRender(hdc, bossPosX - (bossDiameter / 2), bossPosY - (bossDiameter / 2),
 			bossImage->getFrameX(), bossImage->getFrameY());
 
-		// 디버그용
+#if defined(DEBUG_MODE)
 		if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
 			EllipseMakeCenter(hdc, bossPosX, bossPosY, bossDiameter, bossDiameter);
+#endif	// _DEBUG
 	}
 
 	b_Bullet_it = b_Bullet.begin();
@@ -104,24 +107,23 @@ void Boss::render(HDC hdc)
 
 		if ((*b_Bullet_it).type == 3 || (*b_Bullet_it).type == 4)
 		{
-			bossBullet1->frameRender(hdc, (*b_Bullet_it).x - 16, (*b_Bullet_it).y - 16,
+			bossBullet1->frameRender(hdc, (*b_Bullet_it).x - 17, (*b_Bullet_it).y - 17,
 				(*b_Bullet_it).imageFrameX, (*b_Bullet_it).imageFrameY);
 		}
 
-		// 디버그용
+#if defined(DEBUG_MODE)
 		if (KEYMANAGER->isStayKeyDown(VK_LSHIFT))
 			EllipseMakeCenter(hdc, (*b_Bullet_it).x, (*b_Bullet_it).y, (*b_Bullet_it).diameter, (*b_Bullet_it).diameter);
+#endif	// _DEBUG	
 	}
 
-	
-	_stprintf_s(szTemp, sizeof(szTemp), TEXT("보스위치 : %f, %f"), bossPosX, bossPosY);
+#if defined(DEBUG_MODE)
+	TCHAR szTemp[100] = { 0, }; 
+	_stprintf_s(szTemp, sizeof(szTemp), TEXT("보스위치: %f, %f"), bossPosX, bossPosY);
 	TextOut(hdc, 540, 450, szTemp, _tcslen(szTemp));
-	
-	_stprintf_s(szTemp, sizeof(szTemp), TEXT("보스 탄 개수 : %d, %d"), b_Bullet.size(), bulletTermTimer);
+	_stprintf_s(szTemp, sizeof(szTemp), TEXT("타이머: %d"), bulletTermTimer);
 	TextOut(hdc, 540, 480, szTemp, _tcslen(szTemp));
-
-	_stprintf_s(szTemp, sizeof(szTemp), TEXT("각도변화 : %f"), changingBulletAngle);
-	TextOut(hdc, 540, 510, szTemp, _tcslen(szTemp));
+#endif	// _DEBUG
 }
 
 void Boss::setBullet()
@@ -161,7 +163,7 @@ void Boss::setBullet()
 	bossBullet[3].state = NOTCREATE;
 	bossBullet[3].x = 0.f;
 	bossBullet[3].y = 0.f;
-	bossBullet[3].diameter = 32;
+	bossBullet[3].diameter = 28;
 	bossBullet[3].angle = 0;
 	bossBullet[3].speed = 3;
 	bossBullet[3].imageFrameX = 1;
@@ -171,7 +173,7 @@ void Boss::setBullet()
 	bossBullet[4].state = NOTCREATE;
 	bossBullet[4].x = 0.f;
 	bossBullet[4].y = 0.f;
-	bossBullet[4].diameter = 32;
+	bossBullet[4].diameter = 28;
 	bossBullet[4].angle = 0;
 	bossBullet[4].speed = 3;
 	bossBullet[4].imageFrameX = 3;
@@ -180,9 +182,12 @@ void Boss::setBullet()
 
 void Boss::moveBoss(float ingameCurrentTime)
 {
-	if (ingameCurrentTime > 90 - 90 && bossState == NOTCREATE)
+	if (ingameCurrentTime > 95 && bossState == NOTCREATE)
+	{
 		bossState = CREATE;
-
+		bossPattern = APPEAR;
+	}
+		
 	if (bossPosX > F_LEFT && bossPosX < F_RIGHT &&
 		bossPosY + (bossDiameter / 2) > F_UP && bossPosY < F_DOWN && bossState == CREATE)
 	{
@@ -190,56 +195,42 @@ void Boss::moveBoss(float ingameCurrentTime)
 	}
 
 	// 보스 체력에 따른 패턴 변화
-	if (bossHp < 0 && bossPattern == PATTERN3)
+	if (bossHp < 0 && bossPattern == PATTERN6)
 	{
 		SOUNDMANAGER->Play(TEXT("BossDead"), 0.2f);
 		bossPattern = BOSS_DEAD;
 		bossStayTimer = 0;
-		PLAYER->setPlayerScore(PLAYER->getPlayerScore() + PATTERN3_SCORE);
-	}		
-	else if (bossHp < BOSS_PATTERN_HP && bossPattern == PATTERN2)
+		b_Bullet.clear();
+		PLAYER->setPlayerScore(PLAYER->getPlayerScore() + PATTERN6_SCORE);
+	}
+	else if (bossHp < BOSS_PATTERN_HP && bossPattern == PATTERN5)
 	{
-		SOUNDMANAGER->Play(TEXT("EnemyDead"), 0.2f);
-		bossPattern = PATTERN3;
-		for (int i = 0; i < PATTERN3 * 5; i++)
-		{
-			ITEMS->createItem(BLUE_ITEM, RND->getFromIntTo(bossPosX - 50, bossPosX + 50),
-				RND->getFromIntTo(bossPosY - 50, bossPosY + 50));
-			ITEMS->createItem(RED_ITEM, RND->getFromIntTo(bossPosX - 50, bossPosX + 50),
-				RND->getFromIntTo(bossPosY - 50, bossPosY + 50));
-		}
-		bossStayTimer = -1;
-		isBossBulletBreak = true;
+		patternClear(PATTERN6);
+		PLAYER->setPlayerScore(PLAYER->getPlayerScore() + PATTERN5_SCORE);
+	}
+	else if (bossHp < BOSS_PATTERN_HP * 2 && bossPattern == PATTERN4)
+	{
+		patternClear(PATTERN5);
+		PLAYER->setPlayerScore(PLAYER->getPlayerScore() + PATTERN4_SCORE);
+	}
+	else if (bossHp < BOSS_PATTERN_HP * 3 && bossPattern == PATTERN3)
+	{
+		patternClear(PATTERN4);
+		PLAYER->setPlayerScore(PLAYER->getPlayerScore() + PATTERN3_SCORE);
+	}
+	else if (bossHp < BOSS_PATTERN_HP * 4 && bossPattern == PATTERN2)
+	{
+		patternClear(PATTERN3);
 		PLAYER->setPlayerScore(PLAYER->getPlayerScore() + PATTERN2_SCORE);
 	}
-	else if (bossHp < BOSS_PATTERN_HP * 2 && bossPattern == PATTERN1)
+	else if (bossHp < BOSS_PATTERN_HP * 5 && bossPattern == PATTERN1)
 	{
-		SOUNDMANAGER->Play(TEXT("EnemyDead"), 0.2f);
-		bossPattern = PATTERN2;
-		for (int i = 0; i < PATTERN2 * 5; i++)
-		{
-			ITEMS->createItem(BLUE_ITEM, RND->getFromIntTo(bossPosX - 50, bossPosX + 50),
-				RND->getFromIntTo(bossPosY - 50, bossPosY + 50));
-			ITEMS->createItem(RED_ITEM, RND->getFromIntTo(bossPosX - 50, bossPosX + 50),
-				RND->getFromIntTo(bossPosY - 50, bossPosY + 50));
-		}
-		bossStayTimer = -1;
-		isBossBulletBreak = true;
+		patternClear(PATTERN2);
 		PLAYER->setPlayerScore(PLAYER->getPlayerScore() + PATTERN1_SCORE);
 	}
-	else if (bossHp < BOSS_PATTERN_HP * 3 && bossPattern == PATTERN0)
+	else if (bossHp < BOSS_PATTERN_HP * 6 && bossPattern == PATTERN0)
 	{
-		SOUNDMANAGER->Play(TEXT("EnemyDead"), 0.2f);
-		bossPattern = PATTERN1;
-		for (int i = 0; i < PATTERN1 * 5; i++)
-		{
-			ITEMS->createItem(BLUE_ITEM, RND->getFromIntTo(bossPosX - 50, bossPosX + 50),
-				RND->getFromIntTo(bossPosY - 50, bossPosY + 50));
-			ITEMS->createItem(RED_ITEM, RND->getFromIntTo(bossPosX - 50, bossPosX + 50),
-				RND->getFromIntTo(bossPosY - 50, bossPosY + 50));
-		}
-		bossStayTimer = -1;
-		isBossBulletBreak = true;
+		patternClear(PATTERN1);
 		PLAYER->setPlayerScore(PLAYER->getPlayerScore() + PATTERN0_SCORE);
 	}
 
@@ -250,13 +241,13 @@ void Boss::moveBoss(float ingameCurrentTime)
 		{
 			isBossStop = true;
 			bossAngle = PI * 5 / 4;
-			bossSpeed = 0;
+			bossSpeed = 0.f;
 			bossPattern = PATTERN0;
 			SOUNDMANAGER->Stop(TEXT("Field"));
 			SOUNDMANAGER->Play(TEXT("Boss"), 0.2f);
 		}
 		else
-			bossAngle = PI * 3 / 2;
+			bossSpeed = 1.f;
 	}
 	else if (bossPattern == PATTERN0)
 	{
@@ -309,14 +300,20 @@ void Boss::moveBoss(float ingameCurrentTime)
 
 		if (bossStayTimer != -1)
 		{
-			if (bossPosX < 200)
+			if (bossPosX < 230)
 			{
 				bossSpeed = 0.f;
 				bossAngle = PI * 2;
 				isBossStop = true;
 			}
+			
+			if (abs(bossPosX - 280) < 0.6)
+			{
+				bossSpeed = 0.f;
+				isBossStop = true;
+			}
 
-			if (bossPosX > 350)
+			if (bossPosX > 330)
 			{
 				bossSpeed = 0.f;
 				bossAngle = PI;
@@ -349,6 +346,73 @@ void Boss::moveBoss(float ingameCurrentTime)
 	else if (bossPattern == PATTERN3)
 	{
 		// 없음
+	}
+	else if (bossPattern == PATTERN4)
+	{
+		if (bossStayTimer == -1)
+		{
+			bossSpeed = 1.f;
+			isBossStop = false;
+			bossAngle = UTIL::getAngle(bossPosX, bossPosY, 280, 200);
+			if (UTIL::getDistance(bossPosX, bossPosY, 280, 200) < 10)
+			{
+				bossAngle = PI;
+				bossStayTimer = 0;
+			}
+		}
+
+		if (bossStayTimer != -1)
+		{
+			if (bossPosX < 230)
+			{
+				bossSpeed = 0.f;
+				bossAngle = PI * 2;
+				isBossStop = true;
+			}
+
+			if (abs(bossPosX - 280) < 0.6)
+			{
+				bossSpeed = 0.f;
+				isBossStop = true;
+			}
+
+			if (bossPosX > 330)
+			{
+				bossSpeed = 0.f;
+				bossAngle = PI;
+				isBossStop = true;
+			}
+
+			if (isBossStop == true)
+			{
+				bossStayTimer++;
+
+				if (bossStayTimer == 60)
+				{
+					bossSpeed = 1.f;
+					isBossStop = false;
+					bossStayTimer = 0;
+				}
+			}
+		}
+	}
+	else if (bossPattern == PATTERN5)
+	{
+		bossSpeed = 1.f;
+		bossAngle = UTIL::getAngle(bossPosX, bossPosY, 280, 200);
+		if (UTIL::getDistance(bossPosX, bossPosY, 280, 200) < 10)
+		{
+			bossSpeed = 0.f;
+		}
+	}
+	else if (bossPattern == PATTERN6)
+	{
+		bossSpeed = 1.f;
+		bossAngle = UTIL::getAngle(bossPosX, bossPosY, 280, 300);
+		if (UTIL::getDistance(bossPosX, bossPosY, 280, 300) < 10)
+		{
+			bossSpeed = 0.f;
+		}
 	}
 
 	// 이동
@@ -462,7 +526,7 @@ void Boss::createBossBullet(float ingameCurrentTime)
 		{
 			SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
 			SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
-			createNWayBullet(3, 0, PI* 2, 30, bossPosX, bossPosY);
+			createNWayBullet(3, 0, PI* 2, 20, bossPosX, bossPosY);
 			bulletTermTimer = 0;
 		}
 			
@@ -601,6 +665,184 @@ void Boss::createBossBullet(float ingameCurrentTime)
 			bulletTermTimer++;
 		}
 	}
+
+	else if (bossPattern == PATTERN4)
+	{
+		if (isBossBulletBreak == true)
+		{
+			bossBulletBreakTimer++;
+			if (bossBulletBreakTimer == 120)
+			{
+				bossBulletBreakTimer = 0;
+				isBossBulletBreak = false;
+				bulletTermTimer = 0;
+			}
+		}
+		else
+		{
+			if (bulletTermTimer % 2 == 0 && isCreateBossBullet == true)
+			{
+				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				createNWayBullet(0, 0 + changingBulletAngle, (PI * 2) + changingBulletAngle, 20, bossPosX, bossPosY);
+
+				bulletCountNum++;
+				changingBulletAngle += PI / 85;
+
+				if ((PI * 2) - changingBulletAngle < 0.1)
+					changingBulletAngle = 0;
+			}
+
+			if (bulletCountNum == 4)
+			{
+				bulletCountNum = 0;
+				isCreateBossBullet = false;
+			}
+
+			if (isCreateBossBullet == false)
+			{
+				createBossBulletTimer++;
+				if (createBossBulletTimer == 15)
+				{
+					createBossBulletTimer = 0;
+					isCreateBossBullet = true;
+				}
+			}
+		}
+
+		bulletTermTimer++;
+	}
+
+	else if (bossPattern == PATTERN5)
+	{
+		if (isBossBulletBreak == true)
+		{
+			bossBulletBreakTimer++;
+			if (bossBulletBreakTimer == 120)
+			{
+				bossBulletBreakTimer = 0;
+				isBossBulletBreak = false;
+				bulletTermTimer = 0;
+			}
+		}
+		else
+		{
+			if (bulletTermTimer % 2 == 0 && isCreateBossBullet == true)
+			{
+				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				createNWayBullet(0, 0, (PI * 2), 20, 
+					RND->getFromFloatTo(bossPosX - 200, bossPosX + 200), 
+					RND->getFromFloatTo(bossPosY - 50, bossPosY), 1);
+
+				if (bulletTermTimer > 250)
+				{
+					createNWayBullet(2, 0, (PI * 2), 20,
+						RND->getFromFloatTo(bossPosX - 200, bossPosX + 200),
+						RND->getFromFloatTo(bossPosY - 50, bossPosY), 1);
+				}
+
+				bulletCountNum++;
+			}
+		}
+
+		int magicNum = bulletTermTimer / 30;
+		if (magicNum > 25)
+			magicNum = 25;
+
+		if (bulletCountNum == 1)
+		{
+			bulletCountNum = 0;
+			isCreateBossBullet = false;
+		}
+		
+		if (isCreateBossBullet == false)
+		{
+			createBossBulletTimer++;
+			if (createBossBulletTimer > 40 - magicNum)
+			{
+				createBossBulletTimer = 0;
+				isCreateBossBullet = true;
+			}
+		}
+
+		bulletTermTimer++;
+	}
+
+	else if (bossPattern == PATTERN6)
+	{
+		if (isBossBulletBreak == true)
+		{
+			bossBulletBreakTimer++;
+			if (bossBulletBreakTimer == 120)
+			{
+				bossBulletBreakTimer = 0;
+				isBossBulletBreak = false;
+				bulletTermTimer = 0;
+			}
+		}
+		else
+		{
+			if (bulletTermTimer % 30 == 0)
+			{
+				SOUNDMANAGER->Stop(TEXT("EnemyAttack2"));
+				SOUNDMANAGER->Play(TEXT("EnemyAttack2"), 0.07f);
+				createNWayBullet(3, PI / 2 + changingBulletAngle, 
+					PI * 3 / 2 + changingBulletAngle, 2, bossPosX, bossPosY);
+				createNWayBullet(4, 0 + changingBulletAngle * 2,
+					PI * 2 + changingBulletAngle * 2, 4, bossPosX, bossPosY);
+
+				changingBulletAngle += PI / 40;
+
+				if ((PI * 2) - changingBulletAngle < 0.1)
+					changingBulletAngle = 0;
+			}
+
+			if (bulletTermTimer % 10 == 0)
+			{
+				if (bulletCountNum == 0)
+					firstBulletAngle = UTIL::getAngle(bossPosX, bossPosY, PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
+
+				bossBullet[0].speed = 0.7f;
+				bossBullet[0].angle = firstBulletAngle;
+				bossBullet[0].x = bossPosX + (cosf(firstBulletAngle) * DISTANCE_BETWEEN_CREATEPOS_TO_BULLET);
+				bossBullet[0].y = bossPosY + (-sinf(firstBulletAngle) * DISTANCE_BETWEEN_CREATEPOS_TO_BULLET);
+				b_Bullet.push_back(bossBullet[0]);
+			}
+
+			if (bulletTermTimer % 2 == 0 && isCreateBossBullet == true)
+			{
+				if (bulletCountNum == 0)
+					firstBulletAngle = UTIL::getAngle(bossPosX, bossPosY, PLAYER->getPlayerPosX(), PLAYER->getPlayerPosY());
+				
+				bossBullet[2].speed = 4.f;
+				bossBullet[2].angle = firstBulletAngle;
+				bossBullet[2].x = bossPosX + (cosf(firstBulletAngle) * DISTANCE_BETWEEN_CREATEPOS_TO_BULLET);
+				bossBullet[2].y = bossPosY + (-sinf(firstBulletAngle) * DISTANCE_BETWEEN_CREATEPOS_TO_BULLET);
+				b_Bullet.push_back(bossBullet[2]);
+
+				bulletCountNum++;
+			}
+
+			if (bulletCountNum == 8)
+			{
+				bulletCountNum = 0;
+				isCreateBossBullet = false;
+			}
+			
+			if (isCreateBossBullet == false)
+			{
+				createBossBulletTimer++;
+				if (createBossBulletTimer > 10)
+				{
+					createBossBulletTimer = 0;
+					isCreateBossBullet = true;
+				}
+			}
+		}
+
+		bulletTermTimer++;
+	}
 }
 
 void Boss::moveBossBullet(float ingameCurrentTime)
@@ -644,8 +886,25 @@ void Boss::createNWayBullet(int bulletType, float startAngle, float endAngle, in
 {
 	float totalAngle = endAngle - startAngle;
 
+	if (bossPattern == PATTERN4)
+		bossBullet[bulletType].speed = 3 + bulletCountNum * 0.15;
+	else if (bossPattern == PATTERN5)
+	{
+		if(bulletType == 0)
+			bossBullet[bulletType].speed = 1.5;
+		else
+			bossBullet[bulletType].speed = 2.5;
+	}
+	else if (bossPattern == PATTERN6)
+	{
+		if(bulletType == 3)
+			bossBullet[bulletType].speed = 0.7;
+		else if (bulletType == 4)
+			bossBullet[bulletType].speed = 1.4;
+	}		
+
 	// 원일 때 (소수점 계산시 오류발생으로 오차를 둠)
-	if (totalAngle - (PI * 2) < 0.1)
+	if (abs(totalAngle - (PI * 2)) < 0.1)
 	{
 		for (int i = 0; i < num; i++)
 		{
@@ -667,4 +926,25 @@ void Boss::createNWayBullet(int bulletType, float startAngle, float endAngle, in
 			b_Bullet.push_back(bossBullet[bulletType]);
 		}
 	}
+}
+
+void Boss::patternClear(int pattern)
+{
+	SOUNDMANAGER->Play(TEXT("EnemyDead"), 0.2f);
+	bossPattern = pattern;
+	for (int i = 0; i < pattern * 3; i++)
+	{
+		ITEMS->createItem(BLUE_ITEM, RND->getFromIntTo(bossPosX - 50, bossPosX + 50),
+			RND->getFromIntTo(bossPosY - 50, bossPosY + 50));
+		ITEMS->createItem(RED_ITEM, RND->getFromIntTo(bossPosX - 50, bossPosX + 50),
+			RND->getFromIntTo(bossPosY - 50, bossPosY + 50));
+	}
+	bossStayTimer = -1;
+	isBossBulletBreak = true;
+	isCreateBossBullet = true;
+	bulletCountNum = 0;
+	changingBulletAngle = 0.f;
+	bulletTermTimer = 0;
+	createBossBulletTimer = 0;
+	b_Bullet.clear();
 }

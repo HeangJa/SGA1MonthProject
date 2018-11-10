@@ -58,6 +58,7 @@ private:
 	int bulletCountNum;
 	int bulletTermTimer;
 	float changingBulletAngle;
+	float firstBulletAngle;
 
 public:
 	Boss();
@@ -77,13 +78,20 @@ public:
 	void createNWayBullet(int bulletType, float startAngle, float endAngle, int num, 
 		float createPosX, float createPosY, int distance = DISTANCE_BETWEEN_CREATEPOS_TO_BULLET);
 
+	void patternClear(int pattern);
+
 	float getBossPosX() { return bossPosX; }
 	float getBossPosY() { return bossPosY; }
-	float getBossDiameter() { return bossDiameter; }
+	int   getBossDiameter() { return bossDiameter; }
 
 	void  setBossHp(int hp) { bossHp = hp; }
 	int	  getBossHp() { return bossHp; }
 	int	  getBossState() { return bossState; }
 	int	  getBossPattern() { return bossPattern; }
+	int	  getB_BulletSize() { return b_Bullet.size(); }
+	bossBulletInfo_it	getB_Bullet_Begin() { return b_Bullet.begin(); }
+	bossBulletInfo_it	getB_Bullet_End() { return b_Bullet.end(); }
+
+	void  b_BulletClear() { b_Bullet.clear(); }
 };
 

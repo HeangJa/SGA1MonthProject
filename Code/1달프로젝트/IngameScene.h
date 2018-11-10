@@ -22,6 +22,7 @@ private:
 	int		highScore;
 
 	float	ingameStartTime;
+	float	stopTime;
 
 	int		battleFieldAlpha;
 	int		bossFieldAlpha;

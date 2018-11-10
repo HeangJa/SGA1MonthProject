@@ -36,7 +36,7 @@ void timerManager::render(HDC hdc)
 	TCHAR szTemp[256] = { 0, };
 	SetBkMode(hdc, TRANSPARENT);
 
-#ifdef _DEBUG
+#if defined(DEBUG_MODE)
 	{
 		_stprintf(szTemp, TEXT("FPS : %d"), _timer->getFrameRate());
 		TextOut(hdc, 0, 0, szTemp, _tcslen(szTemp));
@@ -50,7 +50,7 @@ void timerManager::render(HDC hdc)
 #else
 	_stprintf(szTemp, TEXT("FPS : %d"), _timer->getFrameRate());
 	TextOut(hdc, 0, 0, szTemp, _tcslen(szTemp));
-#endif
+#endif	// DEBUG_MODE
 }
 
 float timerManager::getElapsedTime() const
