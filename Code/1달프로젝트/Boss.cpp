@@ -513,6 +513,9 @@ void Boss::moveBoss(float ingameCurrentTime)
 		if (bossStayTimer == 300)
 		{
 			SOUNDMANAGER->Stop(TEXT("Boss"));
+			PLAYER->release();
+			ENEMYOBJECT->release();
+			ITEMS->release();
 			SCENEMANAGER->ChangeScene(TEXT("GameClearScene"));
 		}
 	}

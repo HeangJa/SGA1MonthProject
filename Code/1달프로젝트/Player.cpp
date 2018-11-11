@@ -31,6 +31,9 @@ void Player::init()
 		supportBulletImage = IMAGEMANAGER->addFrameImage(TEXT("ReimuSupportBullet"), TEXT("Image\\supportbullet.bmp"),
 			32, 16, 2, 1, true, RGB(255, 255, 255));
 		supportBulletImage->setFrameX(REIMU);
+
+		specialBulletImage = IMAGEMANAGER->addImage(TEXT("ReimuSpecialBullet"), TEXT("Image\\specialbullet.bmp"),
+			60, 60, true, RGB(255, 255, 255));
 	}
 
 	else if (playerType == MARISA)
@@ -51,13 +54,16 @@ void Player::init()
 		supportBulletImage = IMAGEMANAGER->addFrameImage(TEXT("MarisaSupportBullet"), TEXT("Image\\supportbullet.bmp"),
 			32, 16, 2, 1, true, RGB(255, 255, 255));
 		supportBulletImage->setFrameX(MARISA);
+
+		specialBulletImage = IMAGEMANAGER->addImage(TEXT("MarisaSpecialBullet"), TEXT("Image\\specialbullet2.bmp"),
+			60, 60, true, RGB(255, 255, 255));
 	}
 
 	playerShiftImage = IMAGEMANAGER->addImage(TEXT("ShiftImage"), TEXT("Image\\shift.bmp"),
-		60, 60, true, RGB(255, 255, 255));
+		64, 64, true, RGB(255, 255, 255));
 
 	playerShiftMaskImage = IMAGEMANAGER->addImage(TEXT("ShiftMaskImage"), TEXT("Image\\maskshift.bmp"),
-		60, 60, true, RGB(255, 255, 255));
+		64, 64, true, RGB(255, 255, 255));
 
 	// 플레이어 정보
 	playerImage->setFrameX(P_ANI_NORMAL);
@@ -75,6 +81,9 @@ void Player::init()
 	loadBulletFile();	// 탄 정보 파일 불러오기
 	createBulletTimer = 0;
 	createSupportBulletTimer = 0;
+	specialBulletAlpha = 0;
+	specialBulletDuration = 0;
+	specialBulletOn = false;
 
 	// 회전 변환
 	ZeroMemory(vertices, 3);
@@ -86,6 +95,10 @@ void Player::init()
 void Player::release()
 {
 	p_Bullet.clear();
+
+	// 프로그램이 끝날땐 반드시 해제해주셔야 합니다.
+	DeleteDC(hdcMask);
+	DeleteObject(hBitmapMask);
 }
 
 void Player::update()
@@ -184,6 +197,13 @@ void Player::update()
 		createBulletTimer = 0;
 		createSupportBulletTimer = 0;
 	}
+	// 스페셜 탄
+	if (KEYMANAGER->isStayKeyDown('X') && playerPower > 30 && specialBulletOn == false)
+	{
+		specialBulletOn = true;
+		createSpecialBullet();
+		playerPower -= 10;
+	}	
 		
 	// 탄 이동
 	moveBullet();
@@ -215,8 +235,12 @@ void Player::update()
 void Player::render(HDC hdc)
 {
 	// 회전변환
-	//PlgBlt(hdc, vertices, playerShiftImage->getMemDC(), 0, 0, 		
-	//	playerShiftImage->getWidth(), playerShiftImage->getHeight(), NULL, vertices[0].x, vertices[0].y);
+	if (KEYMANAGER->isStayKeyDown(VK_LSHIFT) || KEYMANAGER->isStayKeyDown(VK_RSHIFT))
+	{
+		PlgBlt(hdc, vertices, playerShiftImage->getMemDC(), 0, 0,
+			playerShiftImage->getWidth(), playerShiftImage->getHeight(),
+			createMask(playerShiftImage->getMemDC(), 64, 64), 0, 0);
+	}	
 	
 	// 플레이어
 	playerImage->alphaRender(hdc, playerImage->getX(), playerImage->getY(),
@@ -229,6 +253,16 @@ void Player::render(HDC hdc)
 	// 서포터
 	for (int i = 0; i < (int)(playerPower / 10); i++)
 		supporter->frameRender(hdc, supporterPos[i].x, supporterPos[i].y);
+
+	// 스페셜 탄
+	if (specialBulletOn == true)
+	{
+		for (int i = 0; i < PLAYER_SPECIALBULLET_NUMLIMIT; i++)
+		{
+			if(specialBullet[i].y > F_UP && specialBullet[i].x > F_LEFT && specialBullet[i].x < F_RIGHT)
+				specialBulletImage->alphaRender(hdc, specialBullet[i].x - 32, specialBullet[i].y - 32, specialBulletAlpha);
+		}
+	}
 
 	// 탄
 	renderBullet(hdc);
@@ -301,18 +335,19 @@ void Player::rotate(float angle)
 
 	// 회전 변환
 	// Upper-Left
-	vertices[0].x = (LONG)(((playerShiftImage->getX() - centerX) * c - (playerShiftImage->getY() - centerY) * s) + playerShiftImage->getX() + (playerShiftImage->getWidth() / 2));
-	vertices[0].y = (LONG)(((playerShiftImage->getX() - centerX) * s + (playerShiftImage->getY() - centerY) * c) + playerShiftImage->getY() + (playerShiftImage->getWidth() / 2));
+	vertices[0].x = (LONG)(((playerShiftImage->getX() - centerX) * c - (playerShiftImage->getY() - centerY) * s) + playerShiftImage->getX() + (playerShiftImage->getWidth() / 2) - 2.5);
+	vertices[0].y = (LONG)(((playerShiftImage->getX() - centerX) * s + (playerShiftImage->getY() - centerY) * c) + playerShiftImage->getY() + (playerShiftImage->getWidth() / 2) - 2);
 	// Upper-Right
-	vertices[1].x = (LONG)(((playerShiftImage->getX() + playerShiftImage->getWidth() - centerX) * c - (playerShiftImage->getY() - centerY) * s) + playerShiftImage->getX() + (playerShiftImage->getWidth() / 2));
-	vertices[1].y = (LONG)(((playerShiftImage->getX() + playerShiftImage->getWidth() - centerX) * s + (playerShiftImage->getY() - centerY) * c) + playerShiftImage->getY() + (playerShiftImage->getWidth() / 2));
+	vertices[1].x = (LONG)(((playerShiftImage->getX() + playerShiftImage->getWidth() - centerX) * c - (playerShiftImage->getY() - centerY) * s) + playerShiftImage->getX() + (playerShiftImage->getWidth() / 2) - 2.5);
+	vertices[1].y = (LONG)(((playerShiftImage->getX() + playerShiftImage->getWidth() - centerX) * s + (playerShiftImage->getY() - centerY) * c) + playerShiftImage->getY() + (playerShiftImage->getWidth() / 2) - 2);
 	// Lower-Left
-	vertices[2].x = (LONG)(((playerShiftImage->getX() - centerX) * c - (playerShiftImage->getY() + playerShiftImage->getHeight() - centerY) * s) + playerShiftImage->getX() + (playerShiftImage->getWidth() / 2));
-	vertices[2].y = (LONG)(((playerShiftImage->getX() - centerX) * s + (playerShiftImage->getY() + playerShiftImage->getHeight() - centerY) * c) + playerShiftImage->getY() + (playerShiftImage->getWidth() / 2));
+	vertices[2].x = (LONG)(((playerShiftImage->getX() - centerX) * c - (playerShiftImage->getY() + playerShiftImage->getHeight() - centerY) * s) + playerShiftImage->getX() + (playerShiftImage->getWidth() / 2) - 2.5);
+	vertices[2].y = (LONG)(((playerShiftImage->getX() - centerX) * s + (playerShiftImage->getY() + playerShiftImage->getHeight() - centerY) * c) + playerShiftImage->getY() + (playerShiftImage->getWidth() / 2) - 2);
 }
 
 void Player::loadBulletFile()
 {
+	// 일반 탄
 	int i = 0;
 
 	XmlDocument* doc = new XmlDocument;
@@ -345,6 +380,13 @@ void Player::loadBulletFile()
 		XmlElement* damage = speed->NextSiblingElement();
 		value = (XmlAttribute*)damage->FirstAttribute();
 		load_bullet[i].damage = atoi(value->Value());
+	}
+
+	// 스페셜 탄
+	for (i = 0; i < PLAYER_SPECIALBULLET_NUMLIMIT; i++)
+	{
+		specialBullet[i].diameter = 64;
+		specialBullet[i].speed = 0.5f;
 	}
 }
 
@@ -400,6 +442,18 @@ void Player::createBullet()
 	createSupportBulletTimer++;
 }
 
+void Player::createSpecialBullet()
+{
+	specialBullet[0].x = playerPosX - 64;
+	specialBullet[0].y = playerPosY - 88;
+
+	specialBullet[1].x = playerPosX;
+	specialBullet[1].y = playerPosY - 88;
+
+	specialBullet[2].x = playerPosX + 64;
+	specialBullet[2].y = playerPosY - 88;
+}
+
 void Player::moveBullet()
 {
 	p_Bullet_it = p_Bullet.begin();
@@ -442,6 +496,26 @@ void Player::moveBullet()
 		else
 			p_Bullet_it++;
 	}
+
+	if (specialBulletOn == true)
+	{
+		for (int i = 0; i < PLAYER_SPECIALBULLET_NUMLIMIT; i++)
+		{
+			if (specialBulletAlpha != 255)
+				specialBulletAlpha += 3;
+
+			specialBullet[i].y -= specialBullet[i].speed;
+		}
+
+		specialBulletDuration++;
+
+		if (specialBulletDuration == PLAYER_SPECIALBULLET_DURATION)
+		{
+			specialBulletDuration = 0;
+			specialBulletAlpha = 0;
+			specialBulletOn = false;
+		}
+	}
 }
 
 void Player::renderBullet(HDC hdc)
@@ -469,4 +543,39 @@ void Player::renderBullet(HDC hdc)
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("플레이어 총알 개수 : %d"), p_Bullet.size());
 	TextOut(hdc, 540, 330, szTemp, _tcslen(szTemp));
 #endif	// DEBUG_MODE
+}
+
+HBITMAP Player::createMask(HDC hdcBitmap, int width, int height)
+{
+	// hdcBitmap(출력할 스프라이트)으로 지정한 데이터의 마스크를 만들어서 리턴합니다.
+
+	// 투명색 지정 현재 투명색은 분홍색으로 지정되어 있습니다만,
+
+	// 흰색이나 검정색으로 하시려면 RGB(255, 255, 255) 또는 RGB(0, 0, 0) 으로 수정하시면 됩니다.
+	COLORREF oldBackColor = SetBkColor(hdcBitmap, RGB(255, 255, 255));
+
+
+	// 마스크 비트맵을 만듭니다. (물론 DC도 같이 만듭니다.)
+
+	// 보통 마스크 비트맵은 1BPP 짜리 흑백 비트맵으로 만듭니다.
+	hdcMask = CreateCompatibleDC(NULL);
+	hBitmapMask = CreateBitmap(width, height, 1, 1, NULL); // 마스크 비트맵 생성
+
+	SelectObject(hdcMask, hBitmapMask);
+
+
+	// hdcMask와 hBitmapMask에 hdcBitmap(출력할 스프라이트)의 마스크를 만듭니다.
+	BitBlt(
+		hdcMask,
+		0, 0,
+		width, height,
+		hdcBitmap,
+		0, 0,
+		NOTSRCCOPY);
+
+	// 배경색을 원래 색으로 돌려놓습니다.    
+	SetBkColor(hdcBitmap, oldBackColor);
+
+	// 생성된 마스크비트맵을 리턴
+	return hBitmapMask;
 }

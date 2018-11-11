@@ -26,6 +26,13 @@ public:
 		int	  type;
 	}P_BULLET;
 
+	typedef struct tagspecialbulletinfo
+	{
+		float x, y;
+		float diameter;
+		float speed;
+	}P_SPECIALBULLET;
+
 private:
 	// 플레이어 관련
 	Image * playerImage;
@@ -56,6 +63,7 @@ private:
 	Image*	bulletImage;
 	Image*	supporter;
 	Image*	supportBulletImage;
+	Image*	specialBulletImage;
 
 	POINT	supporterPos[PLAYER_SPECIALSUPPORTER_NUMLIMIT];
 
@@ -69,14 +77,23 @@ private:
 	bulletInfo		p_Bullet;
 	bulletInfo_it	p_Bullet_it;
 
+	P_SPECIALBULLET	specialBullet[PLAYER_SPECIALBULLET_NUMLIMIT];
+
 	int		createBulletTimer;
 	int		createSupportBulletTimer;
+	int		specialBulletDuration;
+	int		specialBulletAlpha;
+	bool	specialBulletOn;
 
 	// 회전변환을 위한 변수들
 	POINT	vertices[3];
 	float	fAnchorX;
 	float	fAnchorY;
 	float	fAngle;
+
+	// 마스크용 비트맵과 DC
+	HBITMAP hBitmapMask;
+	HDC		hdcMask;
 
 public:
 	Player();
@@ -121,13 +138,20 @@ public:
 
 	void loadBulletFile();
 	void createBullet();
+	void createSpecialBullet();
 	void moveBullet();
 	void renderBullet(HDC hdc);
+
+	HBITMAP createMask(HDC hdcBitmap, int width, int height);
 
 	// 충돌함수에서 쓰기위한 함수
 	float getPlayerDiameter() { return playerDiameter; }
 	int	 getP_BulletSize() { return p_Bullet.size(); }
 	bulletInfo_it getP_Bullet_Begin() { return p_Bullet.begin(); }
 	bulletInfo_it getP_Bullet_End() { return p_Bullet.end(); }
+	float getSpecialBulletPosX(int index) { return specialBullet[index].x; }
+	float getSpecialBulletPosY(int index) { return specialBullet[index].y; }
+	float getSpecialBulletDiameter(int index) { return specialBullet[index].diameter; }
+	bool  getSpecialBulletOn() { return specialBulletOn; }
 };
 

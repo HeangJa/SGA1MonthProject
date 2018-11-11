@@ -63,6 +63,43 @@ void Collision::collisionCheck()
 		}
 	}
 
+	// ÇÃ·¹ÀÌ¾îÀÇ ½ºÆä¼È Åº°ú Àû Åº
+	if (PLAYER->getSpecialBulletOn() == true)
+	{
+		if (ENEMYOBJECT->getE_BulletSize() > 0)
+		{
+			e_Bullet_it = ENEMYOBJECT->getE_Bullet_Begin();
+			for (; e_Bullet_it != ENEMYOBJECT->getE_Bullet_End(); e_Bullet_it++)
+			{
+				for (int i = 0; i < PLAYER_SPECIALBULLET_NUMLIMIT; i++)
+				{
+					if ((UTIL::getDistance(PLAYER->getSpecialBulletPosX(i), PLAYER->getSpecialBulletPosY(i),
+						(*e_Bullet_it).x, (*e_Bullet_it).y)) < (PLAYER->getSpecialBulletDiameter(i) / 2 + (*e_Bullet_it).diameter / 2))
+					{
+						(*e_Bullet_it).state = DEAD;
+					}
+				}				
+			}
+		}
+
+		// ÇÃ·¹ÀÌ¾îÀÇ ½ºÆä¼È Åº°ú º¸½º Åº
+		if (BOSS->getB_BulletSize() > 0)
+		{
+			b_Bullet_it = BOSS->getB_Bullet_Begin();
+			for (; b_Bullet_it != BOSS->getB_Bullet_End(); b_Bullet_it++)
+			{
+				for (int i = 0; i < PLAYER_SPECIALBULLET_NUMLIMIT; i++)
+				{
+					if ((UTIL::getDistance(PLAYER->getSpecialBulletPosX(i), PLAYER->getSpecialBulletPosY(i),
+						(*b_Bullet_it).x, (*b_Bullet_it).y)) < ((PLAYER->getSpecialBulletDiameter(i) / 2 + (*b_Bullet_it).diameter / 2) - 2))
+					{
+						(*b_Bullet_it).state = DEAD;
+					}
+				}				
+			}
+		}
+	}
+
 	// ÇÃ·¹ÀÌ¾î Åº°ú Àû ¿ÀºêÁ§Æ®
 	if (PLAYER->getP_BulletSize() > 0 && ENEMYOBJECT->getE_ObjectSize() > 0)
 	{
