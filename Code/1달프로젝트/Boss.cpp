@@ -64,6 +64,7 @@ void Boss::init()
 
 void Boss::release()
 {
+	SOUNDMANAGER->Stop(TEXT("BossDead"));
 }
 
 void Boss::update(float ingameCurrentTime)
@@ -501,6 +502,7 @@ void Boss::moveBoss(float ingameCurrentTime)
 			bossHpBarPercent = (bossHp % BOSS_PATTERN_HP) / (BOSS_PATTERN_HP / 100);
 	}
 
+	// 보스가 죽으면
 	if (bossPattern == BOSS_DEAD)
 	{
 		bossSpeed = 0.f;

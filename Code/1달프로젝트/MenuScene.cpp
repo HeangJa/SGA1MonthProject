@@ -4,6 +4,17 @@
 
 MenuScene::MenuScene()
 {
+	_background = IMAGEMANAGER->addImage(TEXT("MenuScene"), TEXT("Image\\menuscene.bmp"),
+		800, 600, false, RGB(0, 0, 0));
+
+	title = IMAGEMANAGER->addImage(TEXT("Title"), TEXT("Image\\title.bmp"),
+		515, 112, true, RGB(255, 255, 255));
+
+	gamestart = IMAGEMANAGER->addFrameImage(TEXT("GameStart"), TEXT("Image\\gamestart.bmp"),
+		642, 72, 2, 1, true, RGB(255, 255, 255));
+
+	quit = IMAGEMANAGER->addFrameImage(TEXT("Quit"), TEXT("Image\\quit.bmp"),
+		324, 62, 2, 1, true, RGB(255, 255, 255));
 }
 
 MenuScene::~MenuScene()
@@ -12,23 +23,14 @@ MenuScene::~MenuScene()
 
 HRESULT MenuScene::init()
 {
-	_background = IMAGEMANAGER->addImage(TEXT("MenuScene"), TEXT("Image\\menuscene.bmp"),
-		800, 600, false, RGB(0, 0, 0));
-
-	title = IMAGEMANAGER->addImage(TEXT("Title"), TEXT("Image\\title.bmp"),
-		515, 112, true, RGB(255, 255, 255));
 	title->setX(150);
 	title->setY(100);
 	titleAlpha = TRANSPARENT_;
 
-	gamestart = IMAGEMANAGER->addFrameImage(TEXT("GameStart"), TEXT("Image\\gamestart.bmp"), 
-		642, 72, 2, 1, true, RGB(255, 255, 255));
 	gamestart->setX(250);
 	gamestart->setY(320);
 	gamestart->setFrameX(ON);
 
-	quit = IMAGEMANAGER->addFrameImage(TEXT("Quit"), TEXT("Image\\quit.bmp"),
-		324, 62, 2, 1, true, RGB(255, 255, 255));
 	quit->setX(330);
 	quit->setY(420);
 	quit->setFrameX(OFF);
@@ -54,6 +56,7 @@ void MenuScene::update()
 	{
 		if (KEYMANAGER->isOnceKeyDown(VK_UP) || KEYMANAGER->isOnceKeyDown(VK_DOWN))
 		{
+			SOUNDMANAGER->Stop(TEXT("Select"));
 			SOUNDMANAGER->Play(TEXT("Select"), 0.2f);
 
 			if (currentMenu == GAME_START)

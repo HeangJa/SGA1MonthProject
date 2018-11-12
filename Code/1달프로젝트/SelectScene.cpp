@@ -41,6 +41,7 @@ void SelectScene::update()
 {
 	if (KEYMANAGER->isOnceKeyDown(VK_UP) || KEYMANAGER->isOnceKeyDown(VK_DOWN)) 
 	{
+		SOUNDMANAGER->Stop(TEXT("Select"));
 		SOUNDMANAGER->Play(TEXT("Select"), 0.2f);
 
 		if (currentCharacter == REIMU)

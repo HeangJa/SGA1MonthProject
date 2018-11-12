@@ -74,8 +74,8 @@ void Player::init()
 	isPlayerInvincible = false;
 	playerInvincibleTimer = 0;
 	playerScore = 0;
-	playerLife = 10;
-	playerPower = 39;
+	playerLife = 5;
+	playerPower = 20;
 
 	// 플레이어 탄 정보
 	loadBulletFile();	// 탄 정보 파일 불러오기
@@ -202,7 +202,7 @@ void Player::update()
 	{
 		specialBulletOn = true;
 		createSpecialBullet();
-		playerPower -= 10;
+		playerPower -= 5;
 	}	
 		
 	// 탄 이동
@@ -274,7 +274,8 @@ void Player::ifPlayerDead()
 	if (isPlayerDead == true)
 	{
 		SOUNDMANAGER->Stop(TEXT("PlayerDead"));
-		SOUNDMANAGER->Play(TEXT("PlayerDead"), 0.2f);
+		
+		(TEXT("PlayerDead"), 0.2f);
 		playerLife -= 1;
 		isPlayerDead = false;
 		isPlayerInvincible = true;

@@ -45,5 +45,6 @@ public:
 
 	void   loopRender(string strKey, HDC hdc, const LPRECT drawArea, int offsetX, int offsetY);
 
+	int	getSize() { return _mImageList.size(); }
 };
 

@@ -3,6 +3,38 @@
 
 InGameScene::InGameScene()
 {
+	_background = IMAGEMANAGER->addImage(TEXT("BattleScene"), TEXT("Image\\battlescene.bmp"),
+		800, 600, true, RGB(255, 255, 255));
+
+	info = IMAGEMANAGER->addImage(TEXT("Info"), TEXT("Image\\info.bmp"),
+		126, 154, true, RGB(255, 255, 255));
+
+	battleField[0] = IMAGEMANAGER->addImage(TEXT("BattleField"), TEXT("Image\\battlefield2.bmp"),
+		480, 528, false, RGB(255, 255, 255));
+
+	battleField[1] = IMAGEMANAGER->addImage(TEXT("BattleField2"), TEXT("Image\\battlefield2.bmp"),
+		480, 528, false, RGB(255, 255, 255));
+
+	bossField = IMAGEMANAGER->addImage(TEXT("BossField"), TEXT("Image\\bossfield2.bmp"),
+		480, 528, false, RGB(255, 255, 255));
+
+	lifeImage = IMAGEMANAGER->addImage(TEXT("Life"), TEXT("Image\\life.bmp"),
+		32, 32, true, RGB(255, 255, 255));
+
+	stage1Image = IMAGEMANAGER->addImage(TEXT("Stage1Image"), TEXT("Image\\stage1.bmp"),
+		258, 80, true, RGB(255, 255, 255));
+	
+	pauseBackground = IMAGEMANAGER->addImage(TEXT("PauseBackground"), TEXT("Image\\pausebackground.bmp"),
+		800, 600, true, RGB(255, 255, 255));
+
+	ig_returntogame = IMAGEMANAGER->addImage(TEXT("ReturnToGame"), TEXT("Image\\returntogame.bmp"),
+		300, 42, true, RGB(255, 255, 255));
+
+	ig_retry = IMAGEMANAGER->addImage(TEXT("Retry"), TEXT("Image\\retry.bmp"),
+		270, 39, true, RGB(255, 255, 255));
+
+	ig_returntomenu = IMAGEMANAGER->addImage(TEXT("ReturnToMenu"), TEXT("Image\\returntomenu.bmp"),
+		336, 39, true, RGB(255, 255, 255));
 }
 
 InGameScene::~InGameScene()
@@ -11,56 +43,32 @@ InGameScene::~InGameScene()
 
 HRESULT InGameScene::init()
 {
-	_background = IMAGEMANAGER->addImage(TEXT("BattleScene"), TEXT("Image\\battlescene.bmp"),
-		800, 600, true, RGB(255, 255, 255));
-
-	info = IMAGEMANAGER->addImage(TEXT("Info"), TEXT("Image\\info.bmp"),
-		126, 154, true, RGB(255, 255, 255));
 	info->setX(522);
 	info->setY(40);
-
-	battleField[0] = IMAGEMANAGER->addImage(TEXT("BattleField"), TEXT("Image\\battlefield2.bmp"),
-		480, 528, false, RGB(255, 255, 255));
+	
 	battleField[0]->setX(40);
 	battleField[0]->setY(36);
 
-	battleField[1] = IMAGEMANAGER->addImage(TEXT("BattleField2"), TEXT("Image\\battlefield2.bmp"),
-		480, 528, false, RGB(255, 255, 255));
 	battleField[1]->setX(40);
 	battleField[1]->setY(36 - 528);
 
-	bossField = IMAGEMANAGER->addImage(TEXT("BossField"), TEXT("Image\\bossfield2.bmp"),
-		480, 528, false, RGB(255, 255, 255));
 	bossField->setX(40);
 	bossField->setY(36);
 
-	lifeImage = IMAGEMANAGER->addImage(TEXT("Life"), TEXT("Image\\life.bmp"),
-		32, 32, true, RGB(255, 255, 255));
 	lifeImage->setX(650);
 	lifeImage->setY(123);
 
-	stage1Image = IMAGEMANAGER->addImage(TEXT("Stage1Image"), TEXT("Image\\stage1.bmp"),
-		258, 80, true, RGB(255, 255, 255));
 	stage1Image->setX(150);
 	stage1Image->setY(260);
 
-	pauseBackground = IMAGEMANAGER->addImage(TEXT("PauseBackground"), TEXT("Image\\pausebackground.bmp"),
-		800, 600, true, RGB(255, 255, 255));
-
-	ig_returntogame = IMAGEMANAGER->addImage(TEXT("ReturnToGame"), TEXT("Image\\returntogame.bmp"),
-		300, 42, true, RGB(255, 255, 255));
 	ig_returntogame->setX(250);
 	ig_returntogame->setY(200);
 	pauseImageAlpha[RETURNTOGAME] = OPAQUE_;
 
-	ig_retry = IMAGEMANAGER->addImage(TEXT("Retry"), TEXT("Image\\retry.bmp"),
-		270, 39, true, RGB(255, 255, 255));
 	ig_retry->setX(280);
 	ig_retry->setY(300);
 	pauseImageAlpha[RETRY] = TRANSLUCENT_;
 
-	ig_returntomenu = IMAGEMANAGER->addImage(TEXT("ReturnToMenu"), TEXT("Image\\returntomenu.bmp"),
-		336, 39, true, RGB(255, 255, 255));
 	ig_returntomenu->setX(250);
 	ig_returntomenu->setY(400);
 	pauseImageAlpha[RETURNTOMENU] = TRANSLUCENT_;
@@ -120,17 +128,6 @@ void InGameScene::update()
 			state = STOP;
 		}
 
-		// 플레이어가 죽으면 게임오버씬으로 이동
-		if (PLAYER->getPlayerLife() == 0)
-		{
-			SOUNDMANAGER->Stop(TEXT("Field"));
-			SOUNDMANAGER->Stop(TEXT("Boss"));
-			PLAYER->release();
-			ENEMYOBJECT->release();
-			ITEMS->release();
-			SCENEMANAGER->ChangeScene(TEXT("GameOverScene"));
-		}
-
 		// 필드 이동
 		for (int i = 0; i < 2; i++)
 		{
@@ -174,6 +171,17 @@ void InGameScene::update()
 		//충돌
 		COLLISION->collisionCheck();
 
+		// 플레이어가 죽으면 게임오버씬으로 이동
+		if (PLAYER->getPlayerLife() == 0)
+		{
+			SOUNDMANAGER->Stop(TEXT("Field"));
+			SOUNDMANAGER->Stop(TEXT("Boss"));
+			PLAYER->release();
+			ENEMYOBJECT->release();
+			ITEMS->release();
+			SCENEMANAGER->ChangeScene(TEXT("GameOverScene"));
+		}
+
 	}
 
 	else if (state == PAUSE)
@@ -182,6 +190,7 @@ void InGameScene::update()
 		{
 			if (currentSelected != RETURNTOGAME)
 			{
+				SOUNDMANAGER->Stop(TEXT("Select"));
 				SOUNDMANAGER->Play(TEXT("Select"), 0.2f);
 				pauseImageAlpha[currentSelected] = TRANSLUCENT_;
 				currentSelected--;
@@ -193,6 +202,7 @@ void InGameScene::update()
 		{
 			if (currentSelected != RETURNTOMENU)
 			{
+				SOUNDMANAGER->Stop(TEXT("Select"));
 				SOUNDMANAGER->Play(TEXT("Select"), 0.2f);
 				pauseImageAlpha[currentSelected] = TRANSLUCENT_;
 				currentSelected++;
@@ -202,6 +212,7 @@ void InGameScene::update()
 
 		if (KEYMANAGER->isOnceKeyDown('Z'))
 		{
+			SOUNDMANAGER->Stop(TEXT("Select"));
 			SOUNDMANAGER->Play(TEXT("Ok"), 0.2f);
 			switch(currentSelected)
 			{
@@ -280,9 +291,6 @@ void InGameScene::render()
 
 	// 보스
 	BOSS->render(getMemDC());
-
-	//충돌
-	COLLISION->effectRender(getMemDC());
 
 	// 일시정지일 때
 	if(state == PAUSE)

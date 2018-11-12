@@ -50,7 +50,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->AddScene(TEXT("GameOverScene"), new GameOverScene);
 	SCENEMANAGER->AddScene(TEXT("TestScene"), new TestScene);
 
-	SCENEMANAGER->ChangeScene(TEXT("TestScene"));
+	SCENEMANAGER->ChangeScene(TEXT("LoadingScene"));
 
 	return S_OK;
 }

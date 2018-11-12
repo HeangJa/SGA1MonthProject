@@ -4,14 +4,6 @@
 
 GameClearScene::GameClearScene()
 {
-}
-
-GameClearScene::~GameClearScene()
-{
-}
-
-HRESULT GameClearScene::init()
-{
 	_background = IMAGEMANAGER->addImage(TEXT("GameClearScene"), TEXT("Image\\gameclearscene.bmp"),
 		800, 600, false, RGB(0, 0, 0));
 
@@ -27,12 +19,20 @@ HRESULT GameClearScene::init()
 		30, 10, true, RGB(255, 255, 255));
 	cursor->setX(201);
 	cursor->setY(215);
-	cursorAlpha = OPAQUE_;
 
 	highscore = IMAGEMANAGER->addImage(TEXT("HighScore"), TEXT("Image\\highscore.bmp"),
 		378, 106, true, RGB(0, 0, 0));
 	highscore->setX(220);
 	highscore->setY(50);
+}
+
+GameClearScene::~GameClearScene()
+{
+}
+
+HRESULT GameClearScene::init()
+{
+	cursorAlpha = OPAQUE_;
 
 	state = SAVESCORE;
 
@@ -47,7 +47,8 @@ HRESULT GameClearScene::init()
 	ZeroMemory(showHighScoreName, SAVENAMELENGTH * SHOWHIGHSCORELIMIT);
 	showHighScoreLength = 0;
 
-	SOUNDMANAGER->Play(TEXT("GameClear"), 0.2f);
+	
+	(TEXT("GameClear"), 0.2f);
 
 	return S_OK;
 }

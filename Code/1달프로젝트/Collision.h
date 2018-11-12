@@ -37,5 +37,4 @@ public:
 
 	void init();
 	void collisionCheck();
-	void effectRender(HDC hdc);
 };

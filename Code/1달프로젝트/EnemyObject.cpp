@@ -670,5 +670,7 @@ void EnemyObject::render(HDC hdc)
 	TextOut(hdc, 540, 360, szTemp, _tcslen(szTemp));
 	_stprintf_s(szTemp, sizeof(szTemp), TEXT("적 불릿 개수: %d"), e_Bullet.size());
 	TextOut(hdc, 540, 420, szTemp, _tcslen(szTemp));
+	_stprintf_s(szTemp, sizeof(szTemp), TEXT("이미지개수: %d"), IMAGEMANAGER->getSize());
+	TextOut(hdc, 540, 500, szTemp, _tcslen(szTemp));
 #endif	// DEBUG_MODE
 }

@@ -4,14 +4,6 @@
 
 GameOverScene::GameOverScene()
 {
-}
-
-GameOverScene::~GameOverScene()
-{
-}
-
-HRESULT GameOverScene::init()
-{
 	_background = IMAGEMANAGER->addImage(TEXT("GameOverScene"), TEXT("Image\\gameoverscene.bmp"),
 		800, 600, false, RGB(0, 0, 0));
 
@@ -24,12 +16,21 @@ HRESULT GameOverScene::init()
 		270, 39, true, RGB(255, 255, 255));
 	go_retry->setX(280);
 	go_retry->setY(300);
-	retryAlpha = OPAQUE_;
 
 	go_returntomenu = IMAGEMANAGER->addImage(TEXT("ReturnToMenu"), TEXT("Image\\returntomenu.bmp"),
 		336, 39, true, RGB(255, 255, 255));
 	go_returntomenu->setX(250);
 	go_returntomenu->setY(400);
+}
+
+GameOverScene::~GameOverScene()
+{
+}
+
+HRESULT GameOverScene::init()
+{
+	retryAlpha = OPAQUE_;
+
 	returntomenuAlpha = TRANSLUCENT_;
 
 	currentMenu = RETRY;

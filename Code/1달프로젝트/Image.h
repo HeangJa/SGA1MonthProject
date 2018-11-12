@@ -126,7 +126,7 @@ public:
 	//======================================================================================
 	// (7월 26일 추가)
 
-	inline void		setX(float x) { _imageInfo->x = x; }
+ 	inline void		setX(float x) { _imageInfo->x = x; }
 	inline float	getX() { return _imageInfo->x; }
 
 	inline void		setY(float y) { _imageInfo->y = y; }

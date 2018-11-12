@@ -160,7 +160,3 @@ void Collision::collisionCheck()
 	}
 
 }
-
-void Collision::effectRender(HDC hdc)
-{
-}

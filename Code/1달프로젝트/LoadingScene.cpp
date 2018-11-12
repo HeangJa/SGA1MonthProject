@@ -4,6 +4,10 @@
 
 LoadingScene::LoadingScene()
 {
+	_background = IMAGEMANAGER->addImage(TEXT("LoadingScene"), TEXT("Image\\loadingscene.bmp"),
+		800, 600, false, RGB(0, 0, 0));
+	loading = IMAGEMANAGER->addImage(TEXT("Loading"), TEXT("Image\\loading.bmp"),
+		123, 54, true, RGB(255, 255, 255));
 }
 
 LoadingScene::~LoadingScene()
@@ -12,10 +16,6 @@ LoadingScene::~LoadingScene()
 
 HRESULT LoadingScene::init()
 {
-	_background = IMAGEMANAGER->addImage(TEXT("LoadingScene"), TEXT("Image\\loadingscene.bmp"),
-		800, 600, false, RGB(0, 0, 0));
-	loading		= IMAGEMANAGER->addImage(TEXT("Loading"), TEXT("Image\\loading.bmp"),
-		123, 54, true, RGB(255, 255, 255));
 	loading->setX(650);
 	loading->setY(520);
 
