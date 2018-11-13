@@ -87,7 +87,7 @@ HRESULT InGameScene::init()
 	changingAlphaValue = 3;
 	stage1ImageTimer = 0;
 
-	filePath = "Score.txt";
+	filePath = "DataBase\\Score.txt";
 	setHighScore();
 
 	// init()

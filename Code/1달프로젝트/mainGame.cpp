@@ -6,7 +6,6 @@
 #include "InGameScene.h"
 #include "GameClearScene.h"
 #include "GameOverScene.h"
-#include "TestScene.h"
 
 mainGame::mainGame()
 {
@@ -48,7 +47,6 @@ HRESULT mainGame::init()
 	SCENEMANAGER->AddScene(TEXT("InGameScene"), new InGameScene);
 	SCENEMANAGER->AddScene(TEXT("GameClearScene"), new GameClearScene);
 	SCENEMANAGER->AddScene(TEXT("GameOverScene"), new GameOverScene);
-	SCENEMANAGER->AddScene(TEXT("TestScene"), new TestScene);
 
 	SCENEMANAGER->ChangeScene(TEXT("LoadingScene"));
 

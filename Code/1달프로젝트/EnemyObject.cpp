@@ -69,7 +69,7 @@ void EnemyObject::loadEnemyFile()
 	int i = 0;
 
 	XmlDocument* doc = new XmlDocument;
-	XmlError err = doc->LoadFile(TEXT("EnemyObject.xml"));
+	XmlError err = doc->LoadFile(TEXT("DataBase\\EnemyObject.xml"));
 	assert(err == Xml::XML_SUCCESS);
 
 	XmlElement* EnemyObject = doc->FirstChildElement(TEXT("EnemyObject"));
@@ -437,7 +437,7 @@ void EnemyObject::loadEnemyBulletFile()
 	int i = 0;
 
 	XmlDocument* doc = new XmlDocument;
-	XmlError err = doc->LoadFile(TEXT("EnemyBullet.xml"));
+	XmlError err = doc->LoadFile(TEXT("DataBase\\EnemyBullet.xml"));
 	assert(err == Xml::XML_SUCCESS);
 
 	XmlElement* EnemyObject = doc->FirstChildElement(TEXT("EnemyBullet"));

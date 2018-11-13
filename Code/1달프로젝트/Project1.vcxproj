@@ -140,7 +140,6 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SelectScene.cpp" />
     <ClCompile Include="SoundManager.cpp" />
-    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="timerManager.cpp" />
     <ClCompile Include="txtData.cpp" />
@@ -178,7 +177,6 @@
     <ClInclude Include="SelectScene.h" />
     <ClInclude Include="singletonBase.h" />
     <ClInclude Include="SoundManager.h" />
-    <ClInclude Include="TestScene.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="timerManager.h" />
     <ClInclude Include="txtData.h" />

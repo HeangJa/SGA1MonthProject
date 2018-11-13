@@ -42,13 +42,13 @@ HRESULT GameClearScene::init()
 	cursorTimer = 0;
 	currentCursor = 0;
 
-	filePath = "Score.txt";
+	filePath = "DataBase\\Score.txt";
 
 	ZeroMemory(showHighScoreName, SAVENAMELENGTH * SHOWHIGHSCORELIMIT);
 	showHighScoreLength = 0;
 
 	
-	(TEXT("GameClear"), 0.2f);
+	SOUNDMANAGER->Play(TEXT("GameClear"), 0.2f);
 
 	return S_OK;
 }

@@ -90,6 +90,8 @@ void Player::init()
 	fAnchorX = 0;
 	fAnchorY = 0;
 	fAngle = 0;
+
+	mask = createMask(playerShiftImage->getMemDC(), 64, 64);
 }
 
 void Player::release()
@@ -198,7 +200,7 @@ void Player::update()
 		createSupportBulletTimer = 0;
 	}
 	// ½ºÆä¼È Åº
-	if (KEYMANAGER->isStayKeyDown('X') && playerPower > 30 && specialBulletOn == false)
+	if (KEYMANAGER->isStayKeyDown('X') && specialBulletOn == false)
 	{
 		specialBulletOn = true;
 		createSpecialBullet();
@@ -239,7 +241,7 @@ void Player::render(HDC hdc)
 	{
 		PlgBlt(hdc, vertices, playerShiftImage->getMemDC(), 0, 0,
 			playerShiftImage->getWidth(), playerShiftImage->getHeight(),
-			createMask(playerShiftImage->getMemDC(), 64, 64), 0, 0);
+			mask, 0, 0);
 	}	
 	
 	// ÇÃ·¹ÀÌ¾î
@@ -275,7 +277,7 @@ void Player::ifPlayerDead()
 	{
 		SOUNDMANAGER->Stop(TEXT("PlayerDead"));
 		
-		(TEXT("PlayerDead"), 0.2f);
+		SOUNDMANAGER->Play(TEXT("PlayerDead"), 0.2f);
 		playerLife -= 1;
 		isPlayerDead = false;
 		isPlayerInvincible = true;
@@ -352,7 +354,7 @@ void Player::loadBulletFile()
 	int i = 0;
 
 	XmlDocument* doc = new XmlDocument;
-	XmlError err = doc->LoadFile(TEXT("PlayerBullet.xml"));
+	XmlError err = doc->LoadFile(TEXT("DataBase\\PlayerBullet.xml"));
 	assert(err == Xml::XML_SUCCESS);
 	
 	XmlElement* playerbullet = doc->FirstChildElement(TEXT("PlayerBullet"));

@@ -94,6 +94,7 @@ private:
 	// 마스크용 비트맵과 DC
 	HBITMAP hBitmapMask;
 	HDC		hdcMask;
+	HBITMAP mask;
 
 public:
 	Player();
